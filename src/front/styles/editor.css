@@ -1,0 +1,36 @@
+.editor {
+    /* General styles for the editor container */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .ql-editor {
+    /* Styles for the editable content area */
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    min-height: 200px;
+  }
+  
+  .ql-toolbar {
+    /* Styles for the toolbar */
+    border: none;
+    padding: 0;
+  }
+  
+  .ql-toolbar button {
+    /* Styles for toolbar buttons */
+    border: none;
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .ql-toolbar button:hover {
+    /* Styles for toolbar buttons on hover */
+    background-color: #e0e0e0;
+  }
+  

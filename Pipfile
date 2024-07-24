@@ -18,6 +18,10 @@ gunicorn = "*"
 cloudinary = "*"
 flask-admin = "*"
 typing-extensions = "*"
+requests = "*"
+beautifulsoup4 = "*"
+axios = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.10"
