@@ -1,14 +1,35 @@
-// Create the Artist page as a functional component.
-// The Artist component should return all of the artists saved creations (texts) saved form the editor
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
+// Custom hook to fetch artist's creations
+export const useArtistCreations = () => {
+  const [creations, setCreations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-import React from 'react';
+  useEffect(() => {
+    const fetchCreations = async () => {
+      try {
+        const response = await axios.get('/api/creations'); // API endpoint
+        setCreations(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-// Assuming there's a context or service to fetch artist's creations
-import { useArtistCreations } from '../services/artistService';
+    fetchCreations();
+  }, []);
 
-const Artist = () => {
-  const creations = useArtistCreations(); // Custom hook to fetch creations
+  return { creations, loading, error };
+};
+
+export const Artist = () => {
+  const { creations, loading, error } = useArtistCreations();
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
@@ -21,5 +42,3 @@ const Artist = () => {
     </div>
   );
 };
-
-export default Artist;

@@ -10,6 +10,7 @@ import { Login } from "./pages/login";
 import { Forgot } from "./pages/forgot";
 import { Editor } from "./pages/editor";
 import { Artist } from "./pages/artist";
+import { Letters} from "./pages/letters";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -34,6 +35,7 @@ const Layout = () => {
                         <Route element={<Forgot />} path="/forgot" />                        
                         <Route element={<Editor />} path="/editor" />                        
                         <Route element={<Artist />} path="/artist" />                        
+                        <Route element={<Letters />} path="/letters" />                        
                     </Routes>
                     <Footer />
                 </ScrollToTop>
