@@ -3,6 +3,8 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 
+// This is what visitors will see when they open the website
+
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 

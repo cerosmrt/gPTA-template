@@ -2,13 +2,14 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
-
-import { Editor } from "./pages/editor";
-import { Forgot } from "./pages/forgot";
-import { Home } from "./pages/home";
-import { Login } from "./pages/login";
-import { Signup } from "./pages/signup";
 import injectContext from "./store/appContext";
+
+import { Home } from "./pages/home";
+import { Signup } from "./pages/signup";
+import { Login } from "./pages/login";
+import { Forgot } from "./pages/forgot";
+import { Editor } from "./pages/editor";
+import { Artist } from "./pages/artist";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -27,11 +28,12 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-                        <Route element={<Editor />} path="/editor" />                        
-                        <Route element={<Forgot />} path="/forgot" />                        
                         <Route element={<Home />} path="/" />
-                        <Route element={<Login />} path="/login" />                        
                         <Route element={<Signup />} path="/signup" />                        
+                        <Route element={<Login />} path="/login" />                        
+                        <Route element={<Forgot />} path="/forgot" />                        
+                        <Route element={<Editor />} path="/editor" />                        
+                        <Route element={<Artist />} path="/artist" />                        
                     </Routes>
                     <Footer />
                 </ScrollToTop>

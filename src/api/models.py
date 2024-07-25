@@ -2,39 +2,43 @@ from flask_sqlalchemy import SQLAlchemy # This is the database object that we wi
 
 db = SQLAlchemy()
     
-class User(db.Model):
-    __tablename__='users'
-    UserID = db.Column(db.Integer, primary_key=True)
-    Username = db.Column(db.String(50), index=True, nullable = False)
-    Email = db.Column(db.String(120), nullable = False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+class Artist(db.Model):
+    __tablename__='artists'
+    artist_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), index=True, nullable = False)
+    email = db.Column(db.String(120), nullable = False)
+    password = db.Column(db.String(255), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    creations = db.relationship('Creations', backref='artists', lazy=True)
 
-class TextCreated(db.Model):
-    __tablename__='text_created'
-    TextCreatedID = db.Column(db.Integer, primary_key=True)
-    UserID = db.Column(db.Integer, db.ForeignKey('users.UserID'), nullable = False)
-    MetaDataUsed = db.Column(db.String(255), nullable = False)
+class Creations(db.Model):
+    __tablename__='creations'
+    creation_id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'), nullable = False)
+    meta_data_used = db.Column(db.String(255), nullable = False)
     is_public = db.Column(db.Boolean, nullable = False)
+    lines_stamped = db.relationship('LineStamped', backref='creations', lazy=True)
 
 class BookData(db.Model):
     __tablename__='book_data'
-    BookDataID = db.Column(db.Integer, primary_key=True)
-    Authors = db.Column(db.String(255), nullable = False)
-    Title = db.Column(db.String(255), nullable = False)
-    Year = db.Column(db.Integer, nullable = False)
-    Subjects = db.Column(db.String(255), nullable = False)
-    Bookshelves = db.Column(db.String(255), nullable = False)
-    Copyright = db.Column(db.Boolean, nullable = False)
+    book_data_id = db.Column(db.Integer, primary_key=True)
+    authors = db.Column(db.String(255), nullable = False)
+    title = db.Column(db.String(255), nullable = False)
+    year = db.Column(db.Integer, nullable = False)
+    subjects = db.Column(db.String(255), nullable = False)
+    bookshelves = db.Column(db.String(255), nullable = False)
+    copyright = db.Column(db.Boolean, nullable = False)
+    lines_fetched = db.relationship('LineFetched', backref='book_data', lazy=True)
 
 class LineFetched(db.Model):
     __tablename__='line_fetched'
-    LineFetchedID = db.Column(db.Integer, primary_key=True)
-    BookDataID = db.Column(db.Integer, db.ForeignKey('book_data.BookDataID'), nullable = False)
-    Excerpt = db.Column(db.Text, nullable = False)
+    line_fetched_id = db.Column(db.Integer, primary_key=True)
+    book_data_id = db.Column(db.Integer, db.ForeignKey('book_data.book_data_id'), nullable = False)
+    excerpt = db.Column(db.Text, nullable = False)
+    lines_stamped = db.relationship('LineStamped', backref='line_fetched', lazy=True)
 
 class LineStamped(db.Model):
     __tablename__='line_stamped'
-    LineStampedID = db.Column(db.Integer, primary_key=True)
-    TextCreatedID = db.Column(db.Integer, db.ForeignKey('text_created.TextCreatedID'), nullable = False)
-    LineFetchedID = db.Column(db.Integer, db.ForeignKey('line_fetched.LineFetchedID'), nullable = False)
+    line_stamped_id = db.Column(db.Integer, primary_key=True)
+    creation_id = db.Column(db.Integer, db.ForeignKey('creations.creation_id'), nullable = False)
+    line_fetched_id = db.Column(db.Integer, db.ForeignKey('line_fetched.line_fetched_id'), nullable = False)
