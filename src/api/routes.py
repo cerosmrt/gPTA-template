@@ -7,7 +7,7 @@ from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
-from email_sender import send_email
+from .email_sender import send_email
 
 api = Blueprint('api', __name__)
 
@@ -154,9 +154,6 @@ def delete_text(text_id):
     db.session.delete(text)
     db.session.commit()
     return jsonify({'msg': 'Text deleted succesfully'}), 200
-
-from flask import request, jsonify
-from email_sender import send_email
 
 # send email endpoint
 @app.route('/send_email', methods=['POST'])

@@ -33,6 +33,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+			
+			// Added to test fetch randomline in flux.test.js
+			fetchRandomLine: async () => {
+				try {
+					const response = await fetch("https://www.gutenberg.org/random");
+					const data = await response.json();
+					const lines = data.text.split("\n");
+					const randomLine = lines[Math.floor(Math.random() * lines.length)];
+					setStore({ message: randomLine });
+				} catch (error) {
+					console.error('Error fetching random line', error);
+				}
+			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();

@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
-import getState from "./flux.js";
+import React, { useState, useEffect } from "react"; // Import React, useState, and useEffect hooks
+import getState from "./flux.js"; // Import the function to get the initial state and actions from flux.js
 
-// Don't change, here is where we initialize our context, by default it's just going to be null.
+// Create a Context for global state management, initialized to null by default
 export const Context = React.createContext(null);
 
-// This function injects the global store to any view/component where you want to use it, we will inject the context to layout.js, you can see it here:
-// https://github.com/4GeeksAcademy/react-hello-webapp/blob/master/src/js/layout.js#L35
+// Higher-order function that injects the global store into any component
 const injectContext = PassedComponent => {
 	const StoreWrapper = props => {
-		//this will be passed as the contenxt value
+		// Initialize state with the global store and actions
 		const [state, setState] = useState(
 			getState({
+				// Function to get the current store state
 				getStore: () => state.store,
+				// Function to get the current actions
 				getActions: () => state.actions,
+				// Function to update the store and actions
 				setStore: updatedStore =>
 					setState({
+						// Merge the updated store with the existing state
 						store: Object.assign(state.store, updatedStore),
 						actions: { ...state.actions }
 					})
@@ -23,24 +26,23 @@ const injectContext = PassedComponent => {
 
 		useEffect(() => {
 			/**
-			 * EDIT THIS!
-			 * This function is the equivalent to "window.onLoad", it only runs once on the entire application lifetime
-			 * you should do your ajax requests or fetch api requests here. Do not use setState() to save data in the
-			 * store, instead use actions, like this:
-			 **/
-			state.actions.getMessage(); // <---- calling this function from the flux.js actions
-		}, []);
+			 * The function inside useEffect runs only once when the component mounts.
+			 * It’s used to perform side effects, such as AJAX requests or API calls.
+			 * This is equivalent to "window.onLoad" and should be used to initialize data.
+			 * Do not use setState() here to save data; use actions instead.
+			 */
+			state.actions.getMessage(); // Call an action function to fetch data or perform some operation
+		}, []); // Empty dependency array ensures this effect runs only once
 
-		// The initial value for the context is not null anymore, but the current state of this component,
-		// the context will now have a getStore, getActions and setStore functions available, because they were declared
-		// on the state of this component
+		// Provide the context with the current state, including store and actions
+		// Pass the wrapped component and its props to the Context.Provider
 		return (
 			<Context.Provider value={state}>
 				<PassedComponent {...props} />
 			</Context.Provider>
 		);
 	};
-	return StoreWrapper;
+	return StoreWrapper; // Return the wrapper component
 };
 
-export default injectContext;
+export default injectContext; // Export the higher-order function

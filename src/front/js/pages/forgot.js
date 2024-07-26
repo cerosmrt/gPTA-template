@@ -8,11 +8,10 @@ export function Forgot() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Implement the logic to handle the password reset request here
+        // logic to handle the password reset request here
         // This usually involves calling an API that handles the password reset process
         console.log('Password reset request for:', email);
-        // Show a message to the user or handle the next steps in the process
-    };
+      };
     
     return (
         <div>
