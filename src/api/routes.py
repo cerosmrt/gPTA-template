@@ -1,13 +1,16 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint, render_template_string
 from api.models import db, Artist, Creations, BookData, LineFetched, LineStamped
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 from .email_sender import send_email
+import requests
+from bs4 import BeautifulSoup
+import random
 
 api = Blueprint('api', __name__)
 
@@ -167,3 +170,43 @@ def send_email_handler():
         return jsonify({'message': 'Email sent successfully'}), 200
     else:
         return jsonify({'error': 'Failed to send email'}), 500
+
+@api.route('/random-paragraph')
+def random_paragraph():
+    min_id = 1
+    max_id = 68560
+
+    # Generate a random ID within the specified range
+    random_id = random.randint(min_id, max_id)
+
+    # Format the URL with the randomly chosen ID
+    url = f"https://www.gutenberg.org/cache/epub/{random_id}/pg{random_id}-images.html"
+
+    # Send GET request
+    response = requests.get(url)
+
+    # Check if request was successful
+    if response.status_code == 200:
+        # Parse HTML content
+        html_content = response.content
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Extract all <p> tags
+        paragraphs = soup.find_all('p')
+
+        # Select a random <p> tag
+        if paragraphs:
+            random_paragraph = random.choice(paragraphs).text
+            return render_template_string('<p>{{ paragraph }}</p>', paragraph=random_paragraph)
+        else:
+            return "No <p> tags found."
+    else:
+        return f"Failed to retrieve HTML. Status code: {response.status_code}"
+
+# Register the Blueprint with the Flask app
+app.register_blueprint(api, url_prefix='/api')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+

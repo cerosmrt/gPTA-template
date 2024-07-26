@@ -1,18 +1,18 @@
 import React from "react";  // Importing React to use JSX and create the functional component
 import { Link } from "react-router-dom";  // Importing Link for client-side navigation within the application
+import RandomParagraph from "./randomParagraph";  // Importing the RandomParagraph component for rendering random paragraphs
+import styles from "../../styles/navbar.css";  // Importing the CSS module for the Navbar component
 
 // Define the Navbar functional component
 export const Navbar = () => {
 	return (
-		<nav className="navbar navbar-light bg-light">  {/* Navbar element with Bootstrap classes for styling */}
-			<div className="container">  {/* Container div to manage alignment and spacing using Bootstrap */}
-				<Link to="/">  {/* Link component for navigation to the root of the application */}
-					<span className="navbar-brand mb-0 h1">React Boilerplate</span>  {/* Brand name of the navbar */}
+		<nav className="navbar navbar-light bg-light">  {/* Navbar component with light background */}
+			<div className="container">  {/* Container for the navbar content */}
+				<Link to="/">  {/* Link component for navigation to the home route */}
+					<span className="navbar-brand mb-0 h1">React Boilerplate</span>  {/* Navbar brand with the application name */}
 				</Link>
-				<div className="ml-auto">  {/* Div for aligning the next element to the right */}
-					<Link to="/demo">  {/* Link component for navigation to the "/demo" route */}
-						<button className="btn btn-primary">Check the Context in action</button>  {/* Button styled with Bootstrap for the demo route */}
-					</Link>
+				<div className="random-paragraph-container">  {/* Container for the RandomParagraph component */}	
+					<RandomParagraph />  {/* Render the RandomParagraph component */}
 				</div>
 			</div>
 		</nav>
