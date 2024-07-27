@@ -11,14 +11,14 @@ export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="text-center mt-5">
+		<div className = "homepageContainer" >
 			<Navbar />
-			<h1>Hello Rigo!!</h1>
+			<h2>god plays the artist</h2>
 			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
+				{store.message || "In the beginning..."}
 			</div>
 			<p>
-				start creating
+				Create
 			</p>
 			<button onClick={() => { window.location.href = '/login'; }}>Login</button>
 			<button onClick={() => { window.location.href = '/register'; }}>Register</button>

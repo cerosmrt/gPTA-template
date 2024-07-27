@@ -1,7 +1,24 @@
-/*
-    home.css: This website contains selectors only used in home.css
+/* Styles for the main container of the homepage */
+.homepageContainer {
+    padding: 20px; /* Adds padding inside the container */
+    /* background-color: #f8f9fa4d; Light background color */
+    text-align: center; /* Centers the text inside the container */
+}
 
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+/* Styles for the main heading inside the homepage container */
+.homepageContainer h2 {
+    color: #333; /* Sets the text color */
+    font-size: 2.5em; /* Sets the font size */
+    margin-bottom: 20px; /* Adds space below the heading */
+}
+
+/* Styles for the alert box inside the homepage container */
+.homepageContainer .alert {
+    margin: 20px 0; /* Adds vertical margin to the alert box */
+}
+
+/* Styles for the paragraph inside the homepage container */
+.homepageContainer p {
+    font-size: 1.2em; /* Sets the font size */
+    margin-bottom: 20px; /* Adds space below the paragraph */
+}

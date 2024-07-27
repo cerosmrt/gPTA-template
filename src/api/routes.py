@@ -30,7 +30,7 @@ CORS(api)
 def testing_function():
 
     response_body = {
-        "message": "in the beginning there was the word"
+        "message": "In the end..."
     }
 
     return jsonify(response_body), 200
