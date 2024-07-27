@@ -6,10 +6,12 @@
 }
 
 /* Styles for the main heading inside the homepage container */
-.homepageContainer h2 {
+.homepageContainer h1 {
     color: #333; /* Sets the text color */
     font-size: 2.5em; /* Sets the font size */
     margin-bottom: 20px; /* Adds space below the heading */
+    margin-left: auto; /* Centers the heading horizontally */
+    margin-right: auto; /* Centers the heading horizontally */
 }
 
 /* Styles for the alert box inside the homepage container */
@@ -21,4 +23,9 @@
 .homepageContainer p {
     font-size: 1.2em; /* Sets the font size */
     margin-bottom: 20px; /* Adds space below the paragraph */
+}
+
+.createSubtitle {
+    font-size: 1.5em; /* Sets the font size */
+    margin: 0px; /* Removes margin */
 }

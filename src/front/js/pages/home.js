@@ -4,6 +4,7 @@ import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
+import { randomParagraph } from "../component/randomParagraph";
 
 
 //what visitors will see when they open the website
@@ -13,11 +14,10 @@ export const Home = () => {
 	return (
 		<div className = "homepageContainer" >
 			<Navbar />
-			<h2>god plays the artist</h2>
-			<div className="alert alert-info">
-				{store.message || "In the beginning..."}
-			</div>
-			<p>
+			<h1>
+				{store.message || "In the beginning..." || {randomParagraph}}
+			</h1>
+			<p className="createSubtitle">
 				Create
 			</p>
 			<button onClick={() => { window.location.href = '/login'; }}>Login</button>

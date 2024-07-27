@@ -1,9 +1,15 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
 body {
     background-color: black;
     color: white;
-    margin-top: 60px; /* Adjust this value based on the height of your navbar */
-  }
+    padding-top: 60px;
+}
   
