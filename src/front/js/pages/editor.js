@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import "../../styles/editor.css";
-// import RandomParagraph from '../component/randomParagraph'; 
+import styles from "../../styles/editor.css";
 
 export function Editor() {
   const [editorState, setEditorState] = useState('');

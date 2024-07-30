@@ -30,6 +30,13 @@ class BookData(db.Model):
     copyright = db.Column(db.Boolean, nullable = False)
     lines_fetched = db.relationship('LineFetched', backref='book_data', lazy=True)
 
+class TextVoided(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String, nullable=False)
+
+    def __init__(self, text):
+        self.text = text
+
 class LineFetched(db.Model):
     __tablename__='line_fetched'
     line_fetched_id = db.Column(db.Integer, primary_key=True)

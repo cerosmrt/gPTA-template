@@ -1,0 +1,20 @@
+#entry {
+    background-color: transparent; /* Transparent background for text area */
+    color: white; /* White text color */
+    border: none; /* Remove border */
+    text-align: center; /* Center text horizontally */
+    font-family: 'Courier New', Courier, monospace; /* Use Consolas font */
+    font-size: calc(2px + 2vmin); /* Responsive font size based on viewport dimensions */
+    width: 70vmin; /* Width of the text area */
+    height: 70vmin; /* Height of the text area */
+    outline: none; /* Remove outline when focused */
+    resize: none; /* Disable resizing */
+    overflow: auto; /* Enable scrolling if content overflows */
+    white-space: normal; /* Allow text to wrap normally */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    border-radius: 50%; /* Make the text area circular */
+    z-index: 2; /* Stack text area above the circle */
+    display: flex; /* Use flexbox for layout inside the text area */
+    align-items: center; /* Center text vertically inside the text area */
+    justify-content: center; /* Center text horizontally inside the text area */
+}

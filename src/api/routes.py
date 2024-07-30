@@ -1,24 +1,27 @@
 """
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
+This module takes care of starting the API Server, Loading the DB, and Adding the endpoints.
 """
-from flask import Flask, request, jsonify, url_for, Blueprint, render_template_string
-from api.models import db, Artist, Creations, BookData, LineFetched, LineStamped
-from api.utils import generate_sitemap, APIException
+from flask import Flask, request, jsonify, Blueprint, render_template_string
+from api.models import db, Artist, Creations, BookData, TextVoided, LineStamped, LineFetched
+from api.utils import APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
-from .email_sender import send_email
 import requests
 from bs4 import BeautifulSoup
 import random
+from api.email_sender import send_email
+from api.save_text_to_file import save_text_to_file
 
+
+# Create a blueprint named 'api'
 api = Blueprint('api', __name__)
 
+# Initialize the Flask application
 app = Flask(__name__)
 
 # Configure JWT settings (optional)
 app.config['JWT_SECRET_KEY'] = 'your_secret_key'
-
 
 # Initialize JWTManager
 jwt = JWTManager(app)
@@ -26,26 +29,26 @@ jwt = JWTManager(app)
 # Allow CORS requests to this API
 CORS(api)
 
+# Define a simple test route
 @api.route('/hello', methods=['POST', 'GET'])
 def testing_function():
-
     response_body = {
         "message": "In the end..."
     }
-
     return jsonify(response_body), 200
 
+# Define the register route
 @api.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')  
+    hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
     new_artist = Artist(name=data['name'], email=data['email'], password=hashed_password, is_active=True)
     db.session.add(new_artist)
     db.session.commit()
     return jsonify({"msg": "Artist created"}), 200
 
+# Define the login route
 @api.route('/login', methods=['POST'])
-# @jwt_required()
 def login():
     data = request.get_json()
     artist = Artist.query.filter_by(name=data['name']).first()
@@ -54,17 +57,19 @@ def login():
         return jsonify({'token': token}), 200
     return jsonify({'msg': 'Wrong name or password'}), 401
 
+# Define the reset-password route
 @api.route('/reset-password', methods=['POST'])
 def reset_password():
-    data=request.get_json()
-    artist=Artist.query.filter_by(name=data['name']).first()
+    data = request.get_json()
+    artist = Artist.query.filter_by(name=data['name']).first()
     if artist:
         hashed_password = generate_password_hash(data['new_password'], method='sha256')
-        artist.password=hashed_password
+        artist.password = hashed_password
         db.session.commit()
         return jsonify({'msg': 'Password updated'}), 200
-    return jsonify({'msg': 'Artist not found'}), 404 
+    return jsonify({'msg': 'Artist not found'}), 404
 
+# Define the save_text route
 @api.route('/texts', methods=['POST'])
 @jwt_required()
 def save_text():
@@ -73,8 +78,9 @@ def save_text():
     new_text = Creations(UserID=user_id, MetaDataUser=data['metadata'], is_public=data.get('is_public', True))
     db.session.add(new_text)
     db.session.commit()
-    return jsonify({"message": "Text saved succesfully"}), 201
+    return jsonify({"message": "Text saved successfully"}), 201
 
+# Define the get_text route
 @api.route('/texts/<int:text_id>', methods=['GET'])
 def get_text(text_id):
     text = Creations.query.get_or_404(text_id)
@@ -84,6 +90,7 @@ def get_text(text_id):
         'is_public': text.is_public
     }), 200
 
+# Define the get_compositions route
 @api.route('/compositions', methods=['GET'])
 def get_compositions():
     compositions = Creations.query.all()
@@ -94,7 +101,8 @@ def get_compositions():
         'is_public': text.is_public
     } for text in compositions]), 200
 
-@api.route('compositions/<int:text_id>', methods=['GET'])
+# Define the get_composition route
+@api.route('/compositions/<int:text_id>', methods=['GET'])
 def get_composition(text_id):
     composition = Creations.query.get_or_404(text_id)
     return jsonify({
@@ -104,6 +112,7 @@ def get_composition(text_id):
         'is_public': composition.is_public
     }), 200
 
+# Define the get_books route
 @api.route('/books', methods=['GET'])
 def get_books():
     books = BookData.query.all()
@@ -116,6 +125,7 @@ def get_books():
         'Bookshelves': book.Bookshelves,
     } for book in books]), 200
 
+# Define the get_book route
 @api.route('/books/<int:book_id>', methods=['GET'])
 def get_book(book_id):
     book = BookData.query.get_or_404(book_id)
@@ -128,7 +138,8 @@ def get_book(book_id):
         'Bookshelves': book.Bookshelves,
     }), 200
 
-@api.route('/user/<int:user_id>/texts', methods=['GET'])
+# Define the delete_user route
+@api.route('/user/<int:user_id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(user_id):
     current_user_id = get_jwt_identity()
@@ -141,25 +152,39 @@ def delete_user(user_id):
     
     db.session.delete(user)
     db.session.commit()
-    return jsonify({'msg': 'User deleted succesfully'}), 200
+    return jsonify({'msg': 'User deleted successfully'}), 200
 
+# Define the delete_text route with a DELETE method and a text_id parameter
 @api.route('/text/<int:text_id>', methods=['DELETE'])
-@jwt_required()
+@jwt_required()  # Ensure that the user is authenticated with a valid JWT token
 def delete_text(text_id):
+    # Get the user ID from the JWT token
     current_user_id = get_jwt_identity()
+    
+    # Retrieve the text entry from the database using the provided text_id
     text = Creations.query.get_or_404(text_id)
+    
+    # Check if the text entry exists
     if not text:
+        # Return a 404 error if the text is not found
         return jsonify({'msg': 'Text not found'}), 404
     
-    if  text.UserID != current_user_id:
+    # Check if the current user is authorized to delete the text
+    if text.UserID != current_user_id:
+        # Return a 403 error if the user is not authorized
         return jsonify({'msg': 'Unauthorized'}), 403
     
+    # Delete the text entry from the database
     db.session.delete(text)
+    
+    # Commit the transaction to save changes
     db.session.commit()
-    return jsonify({'msg': 'Text deleted succesfully'}), 200
+    
+    # Return a success message indicating the text was deleted
+    return jsonify({'msg': 'Text deleted successfully'}), 200
 
-# send email endpoint
-@app.route('/send_email', methods=['POST'])
+# send_email route/"error": "Failed to send email"
+@api.route('/send_email', methods=['POST'])
 def send_email_handler():
     data = request.get_json()
     to_email = data['to']
@@ -171,7 +196,8 @@ def send_email_handler():
     else:
         return jsonify({'error': 'Failed to send email'}), 500
 
-@api.route('/random-paragraph')
+# random-paragraph route/tested on postman
+@api.route('/random-paragraph', methods=['GET'])
 def random_paragraph():
     min_id = 1
     max_id = 68560
@@ -203,10 +229,32 @@ def random_paragraph():
     else:
         return f"Failed to retrieve HTML. Status code: {response.status_code}"
 
+# Simulated database for stored lines
+stored_lines = []
+
+# Process the text here (e.g., save to database, perform operations)
+def save_text_to_db(text):
+    new_entry = TextVoided(text=text)  # Create a new model instance with the text
+    db.session.add(new_entry)  # Add the instance to the session
+    db.session.commit()  # Commit the session to save the instance to the database
+    stored_lines.append({"text": text})  # Add the text to the simulated database
+
+# submit-text route/tested on postman
+@api.route('/submit-text', methods=['POST'])
+def submit_text():
+    data = request.get_json()
+    text = data.get('text')
+        
+    save_text_to_db(text) # function to save text to the database
+
+    return jsonify({"message": "Text received", "text": text}), 200
+
+@api.route('/voided-lines', methods=['GET'])
+def get_voided_lines():
+    return jsonify(stored_lines), 200
+
 # Register the Blueprint with the Flask app
 app.register_blueprint(api, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-

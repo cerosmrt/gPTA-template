@@ -1,0 +1,29 @@
+/* void.css */
+
+.voidPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+.voidPage h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.document {
+    width: 80%;
+    max-width: 800px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.document p {
+    margin: 10px 0;
+    line-height: 1.6;
+}

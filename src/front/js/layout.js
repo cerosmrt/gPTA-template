@@ -12,6 +12,7 @@ import { Editor } from "./pages/editor";
 import { Artist } from "./pages/artist";
 import { Letters} from "./pages/letters";
 import { Voider } from "./pages/voider";
+import { Void } from "./pages/void";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -38,6 +39,7 @@ const Layout = () => {
                         <Route element={<Artist />} path="/artist" />                        
                         <Route element={<Letters />} path="/letters" />
                         <Route element={<Voider />} path="/voider" />                        
+                        <Route element={<Void />} path="/void" />                        
                     </Routes>
                     {/* <Footer /> */}
                 </ScrollToTop>
