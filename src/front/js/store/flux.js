@@ -2,6 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			paragraph: '',
 			demo: [
 				{
 					title: "FIRST",
@@ -60,6 +61,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			// `fetchParagraph` is an asynchronous function that fetches a random paragraph from the server.
+			fetchParagraph: async () => {
+				try {
+					// Sends a request to the specified API endpoint.
+					const response = await fetch(`${process.env.BACKEND_URL}/api/random-paragraph`);
+					if (response.ok) {
+						// If the response is OK (`response.ok`), the response text is read and set to the `paragraph` state.
+						const text = await response.text();
+						setStore({ paragraph: text });
+						console.log(text);
+						// actions.setMessage(text);
+					} else {
+						// If the response is not OK, an error message is logged, and the state is set to 'Failed to fetch paragraph.'
+						console.error('Failed to fetch paragraph:', response.status);
+						setStore({paragraph: 'Failed to fetch paragraph.'});
+					}
+				} catch (error) {
+					// If an error occurs during the fetch operation, it is caught in the `catch` block, logged, and the state is set to 'Error fetching paragraph.'
+					console.error('Error:', error);
+					setStore({paragraph: 'Failed to fetch paragraph.'});
+				}
 			}
 		}
 	};

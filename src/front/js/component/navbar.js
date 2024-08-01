@@ -1,7 +1,7 @@
 import React from "react";  // Importing React to use JSX and create the functional component
 import { Link } from "react-router-dom";  // Importing Link for client-side navigation within the application
 import RandomParagraph from "./randomParagraph";  // Importing the RandomParagraph component for rendering random paragraphs
-import styles from "../../styles/navbar.css";  // Importing the CSS module for the Navbar component
+import "../../styles/navbar.css";  // Importing the CSS module for the Navbar component
 
 // Define the Navbar functional component
 export const Navbar = () => {

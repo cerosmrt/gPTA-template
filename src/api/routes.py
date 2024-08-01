@@ -219,11 +219,13 @@ def random_paragraph():
 
         # Extract all <p> tags
         paragraphs = soup.find_all('p')
-
+        # seleccionar parrafo de mas de tantos caracteres y menos de tantos caracteres
         # Select a random <p> tag
         if paragraphs:
             random_paragraph = random.choice(paragraphs).text
-            return render_template_string('<p>{{ paragraph }}</p>', paragraph=random_paragraph)
+            print(random_paragraph)
+            # return render_template_string('<p>{{ paragraph }}</p>', paragraph=random_paragraph)
+            return random_paragraph
         else:
             return "No <p> tags found."
     else:

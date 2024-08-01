@@ -34,3 +34,38 @@
     background-color: #e0e0e0;
   }
   
+.invisible-editor .ql-container {
+  border: none;
+}
+
+.invisible-editor .ql-editor {
+  border: none;
+}
+
+.randomParagraphButton {
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  align-items: center; /* Center the button vertically */
+  margin-bottom: 20px; /* Add some space below the button */
+}
+
+.randomParagraphButton button {
+  margin: 10px; /* Adds space around the buttons */
+  padding: 10px; /* Adds padding inside the buttons */
+  font-size: 1em; /* Sets the font size */
+  border: 2px solid white; /* Adds a solid border with the desired color */
+  border-radius: 50%; /* Makes the button a circle */
+  background-color: rgba(255, 255, 255, 0); /* Sets the background color to transparent */
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
+  width: 50px; /* Sets a fixed width for the button */
+  height: 50px; /* Sets a fixed height for the button */
+  display: flex; /* Centers the text inside the circle */
+  align-items: center; /* Centers the text vertically */
+  justify-content: center; /* Centers the text horizontally */
+}
+
+/* Styles for the button when hovered */
+.randomParagraphButton button:hover {
+  background-color: rgba(67, 67, 67, 0.238); /* Changes the background color on hover */
+  color: white; /* Changes the text color on hover */
+}

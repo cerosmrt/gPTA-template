@@ -1,7 +1,7 @@
 /* Styles for the random paragraph container */
 .randomParagraphButton {
     /* padding: 20px; Adds padding inside the container */
-    background-color: #f0f0f0; /* Light background color */
+    background-color: #f0f0f000; /* Light background color */
     border-radius: 5px; /* Rounds the corners of the container */
     /* margin: 20px 0; Adds vertical margin */
 }
