@@ -41,10 +41,27 @@ def testing_function():
 @api.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+
+    email = data.get('email')
+    name = data.get('name')
+    password = data.get('password')
+
+    # Validate the data
+    if not email or not name or not password:
+        return jsonify({'msg': 'All fields are required'}), 400
+    
+    # Check if email already exists
+    if Artist.query.filter_by(email=email).first():
+        return jsonify({'msg': 'Email already exists'}), 400
+    
+    #Hash the password
     hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+
+    # Create a new artist and save to database
     new_artist = Artist(name=data['name'], email=data['email'], password=hashed_password, is_active=True)
     db.session.add(new_artist)
     db.session.commit()
+    
     return jsonify({"msg": "Artist created"}), 200
 
 # Define the login route

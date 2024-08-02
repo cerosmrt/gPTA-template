@@ -1,20 +1,54 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import styles from "../../styles/register.css";
+import { Link, useNavigate } from "react-router-dom";
+import "../../styles/register.css";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const history = useNavigate();
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // logic to handle user registration here
+
+    setErrors({});
+    setMessage("");
+
+    if (!email || !username || !password) {
+      setErrors({ form: "All fields are required" });
+      return;
+    }
+
+    console.log("Backend URL:", process.env.BACKEND_URL); // Debugging line
+
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, name: username, password }),
+      });
+
+      if (response.ok) {
+        setMessage("Registration successful!");
+        setTimeout(() => {
+          history.push("/login");
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setErrors({ form: errorData.msg || "Registration failed" });
+      }
+    } catch (error) {
+      console.error("Error:", error); // Debugging line
+      setErrors({ form: "An error occurred. Please try again." });
+    }
   };
 
   return (
@@ -71,6 +105,8 @@ export const Register = () => {
             </button>
           </div>
         </form>
+        {errors.form && <div className="error-feedback">{errors.form}</div>}
+        {message && <div className="success-feedback">{message}</div>}
         <div className="links">
           <p>
             Already an artist? <Link to="/login">Login</Link>
