@@ -1,23 +1,34 @@
 .register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
-    background-color: #000000; 
+    border: 10px solid white; /* White border around the circle */
+    border-radius: 50%; /* Make the div circular */
+    width: 90vmin; /* Width based on viewport minimum dimension */
+    height: 90vmin; /* Height based on viewport minimum dimension */
+    box-sizing: border-box; /* Include border in the element's total width and height */
+    display: flex; /* Use flexbox for layout inside the circle */
+    align-items: center; /* Center items vertically inside the circle */
+    justify-content: center; /* Center items horizontally inside the circle */
+    z-index: 1; /* Stack circle above other elements */
   }
   
   .signup-form {
+    display: flex;
+    flex-direction: column;
     max-width: 400px;
     width: 100%;
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd00;
     padding: 20px;
     border-radius: 8px;
-    background-color: #525252;
+    background-color: #52525200;
+    align-items: center;
+    justify-content: center;
   }
   
   .form-group {
     margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   
   .form-group label {

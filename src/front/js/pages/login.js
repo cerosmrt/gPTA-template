@@ -2,15 +2,52 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/login.css";
 
+// Retrieve username (email) and password from form inputs.
+// Trigger handleSubmit function on form submission.
+// Ensure email and password are not empty before sending the request.
+// Fetch data from the API endpoint (/api/login) with email and password in the request body.
+// On successful login, store the returned token in sessionStorage.
+// On failure, display an error message.
+// Redirect to the /private route upon successful login.
+
+// `${process.env.BACKEND_URL}/api/login`
+
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validation logic to be added
+    if (!email || !password) {
+      setErrors({ 
+        email: !email ? "Email required" : "", 
+        password: !password ? "Password required" : ""
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        sessionStorage.setItem('token', data.token);
+        navigate('/voider');
+      } else {
+        const errorData = await response.json();
+        setErrors({ form: errorData.message || "Login failed" });
+      }
+    } catch {
+      setErrors({ form: "An error ocurred. Please try again"});
+    }
   };
 
   return (

@@ -20,8 +20,12 @@ api = Blueprint('api', __name__)
 # Initialize the Flask application
 app = Flask(__name__)
 
+# # Configure the database URI
+# app.config['SQLALCHEMY_DATABASE_URI'] = 
+
 # Configure JWT settings (optional)
-app.config['JWT_SECRET_KEY'] = 'your_secret_key'
+app.config['JWT_SECRET_KEY'] = 'abracadabra'
+app.config['JWT_TOKEN_LOCATION'] = 'headers'
 
 # Initialize JWTManager
 jwt = JWTManager(app)
@@ -30,7 +34,7 @@ jwt = JWTManager(app)
 CORS(api)
 
 # Define a simple test route
-@api.route('/hello', methods=['POST', 'GET'])
+@api.route('/', methods=['POST', 'GET'])
 def testing_function():
     response_body = {
         "message": "In the end..."
@@ -68,17 +72,23 @@ def register():
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    artist = Artist.query.filter_by(name=data['name']).first()
-    if artist and check_password_hash(artist.password, data['password']):
-        token = create_access_token(identity=artist.artist_id)
-        return jsonify({'token': token}), 200
+    if not data or not data.get('email') or not data.get('password'):
+        return jsonify({'msg': 'All fields are required'}), 400
+
+    artist = Artist.query.filter_by(email=data['email']).first()
+    if artist:
+        # Comparar la contraseña proporcionada con la contraseña almacenada
+        if check_password_hash(artist.password, data['password']):
+            token = create_access_token(identity=artist.artist_id)
+            return jsonify({'token': token}), 200
+
     return jsonify({'msg': 'Wrong name or password'}), 401
 
 # Define the reset-password route
 @api.route('/reset-password', methods=['POST'])
 def reset_password():
     data = request.get_json()
-    artist = Artist.query.filter_by(name=data['name']).first()
+    artist = Artist.query.filter_by(email=data['name']).first()
     if artist:
         hashed_password = generate_password_hash(data['new_password'], method='sha256')
         artist.password = hashed_password
@@ -92,7 +102,7 @@ def reset_password():
 def save_text():
     data = request.get_json()
     user_id = get_jwt_identity()
-    new_text = Creations(UserID=user_id, MetaDataUser=data['metadata'], is_public=data.get('is_public', True))
+    new_text = Creations(artist_id=user_id, MetaDataUser=data['metadata'], is_public=data.get('is_public', True))
     db.session.add(new_text)
     db.session.commit()
     return jsonify({"message": "Text saved successfully"}), 201
@@ -102,7 +112,7 @@ def save_text():
 def get_text(text_id):
     text = Creations.query.get_or_404(text_id)
     return jsonify({
-        'UserID': text.artist_id,
+        'artist_id': text.artist_id,
         'MetaDataUser': text.MetaDataUsed,
         'is_public': text.is_public
     }), 200
@@ -113,7 +123,7 @@ def get_compositions():
     compositions = Creations.query.all()
     return jsonify([{
         'TextCreatedID': text.TextCreatedID,
-        'UserID': text.UserID,
+        'artist_id': text.artist_id,
         'MetaDataUsed': text.MetaDataUsed,
         'is_public': text.is_public
     } for text in compositions]), 200
@@ -124,7 +134,7 @@ def get_composition(text_id):
     composition = Creations.query.get_or_404(text_id)
     return jsonify({
         'TextCreatedID': composition.TextCreatedID,
-        'UserID': composition.UserID,
+        'artist_id': composition.artist_id,
         'MetaDataUsed': composition.MetaDataUsed,
         'is_public': composition.is_public
     }), 200
@@ -187,7 +197,7 @@ def delete_text(text_id):
         return jsonify({'msg': 'Text not found'}), 404
     
     # Check if the current user is authorized to delete the text
-    if text.UserID != current_user_id:
+    if text.artist_id != current_user_id:
         # Return a 403 error if the user is not authorized
         return jsonify({'msg': 'Unauthorized'}), 403
     
