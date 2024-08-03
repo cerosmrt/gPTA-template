@@ -39,7 +39,7 @@ export const Register = () => {
       if (response.ok) {
         setMessage("Registration successful!");
         setTimeout(() => {
-          history.push("/login");
+          history("/login");
         }, 2000);
       } else {
         const errorData = await response.json();
