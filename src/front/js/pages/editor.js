@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react"; // Import necessary 
 import ReactQuill from 'react-quill'; // Import ReactQuill for rich text editing
 import 'react-quill/dist/quill.snow.css'; // Import Quill editor styles
 import "../../styles/editor.css"; // Import custom styles for the editor
-import { Navbar } from "react-bootstrap";
-import RandomParagraph from "../component/randomParagraph";  // Importing the RandomParagraph component for rendering random paragraphs
+import RandomParagraph from "../component/randomParagraph"; // Importing the RandomParagraph component for rendering random paragraphs
+import SaveButton from "../component/save"; // Import SaveButton component for saving the editor content
 
 export function Editor() {
   const [editorState, setEditorState] = useState(''); // State to store editor content
@@ -39,9 +39,28 @@ export function Editor() {
     }
   }, [editorState]);
 
+  const handleSave = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/compositions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: editorState }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save composition");
+      }
+      console.log("Composition saved successfully");
+    } catch (error) {
+      console.log("Save error:", error);
+    }
+  };
+
   return (
     <div tabIndex={0}> {/* Make div focusable */}
       <RandomParagraph className="randomParagraphButton"/>
+      <SaveButton onSave={handleSave} /> {/* Render the SaveButton component with the handleSave function */} 
       <ReactQuill
         className="invisible-editor" // Add custom CSS class for the editor
         ref={quillRef} // Attach ref to the Quill editor

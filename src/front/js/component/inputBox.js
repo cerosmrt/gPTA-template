@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'; // Importa los hooks necesarios desde React
-import styles from "../../styles/inputBox.css"; // Importa los estilos CSS para este componente
+import "../../styles/inputBox.css"; // Importa los estilos CSS para este componente
 
 const InputBox = () => {
     const [text, setText] = useState(''); // Estado para almacenar el texto ingresado en el input
@@ -34,7 +34,6 @@ const InputBox = () => {
             if (text.trim()) { // Verifica si el texto no está vacío
                 sendTextToBackend(text); // Llama a la función para enviar el texto al backend
                 setText(''); // Limpia el campo de entrada después de enviar
-                inputRef.current.blur(); // Remueve el enfoque del campo de entrada
             }
         }
     };

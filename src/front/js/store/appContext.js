@@ -31,7 +31,7 @@ const injectContext = PassedComponent => {
 			 * This is equivalent to "window.onLoad" and should be used to initialize data.
 			 * Do not use setState() here to save data; use actions instead.
 			 */
-			state.actions.getMessage(); // Call an action function to fetch data or perform some operation
+			// state.actions.getMessage(); // Call an action function to fetch data or perform some operation
 		}, []); // Empty dependency array ensures this effect runs only once
 
 		// Provide the context with the current state, including store and actions

@@ -1,6 +1,6 @@
 import React from 'react'; // Import React library
 import InputBox from '../component/inputBox'; // Import InputBox component
-import styles from "../../styles/voider.css"; // Import CSS styles for this component
+import "../../styles/voider.css"; // Import CSS styles for this component
 
 export const Voider = () => { // Define the Voider component
     return (

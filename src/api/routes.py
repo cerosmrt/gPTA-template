@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, Blueprint, render_template_string
 from api.models import db, Artist, Creations, BookData, TextVoided, LineStamped, LineFetched
 from api.utils import APIException
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
@@ -13,22 +13,8 @@ import random
 from api.email_sender import send_email
 from api.save_text_to_file import save_text_to_file
 
-
 # Create a blueprint named 'api'
 api = Blueprint('api', __name__)
-
-# Initialize the Flask application
-app = Flask(__name__)
-
-# # Configure the database URI
-# app.config['SQLALCHEMY_DATABASE_URI'] = 
-
-# Configure JWT settings (optional)
-app.config['JWT_SECRET_KEY'] = 'abracadabra'
-app.config['JWT_TOKEN_LOCATION'] = 'headers'
-
-# Initialize JWTManager
-jwt = JWTManager(app)
 
 # Allow CORS requests to this API
 CORS(api)
@@ -74,10 +60,12 @@ def login():
     data = request.get_json()
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'msg': 'All fields are required'}), 400
-
     artist = Artist.query.filter_by(email=data['email']).first()
+    print(artist)
     if artist:
         # Comparar la contraseña proporcionada con la contraseña almacenada
+        # print(artist.password)
+        # print(data.password)
         if check_password_hash(artist.password, data['password']):
             token = create_access_token(identity=artist.artist_id)
             return jsonify({'token': token}), 200
@@ -96,7 +84,7 @@ def reset_password():
         return jsonify({'msg': 'Password updated'}), 200
     return jsonify({'msg': 'Artist not found'}), 404
 
-# Define the save_text route
+# Define the save_text route (saving new content created by the user)
 @api.route('/texts', methods=['POST'])
 @jwt_required()
 def save_text():
@@ -117,7 +105,7 @@ def get_text(text_id):
         'is_public': text.is_public
     }), 200
 
-# Define the get_compositions route
+# Define the get_compositions route (ill use to retrieve all artist compositions)
 @api.route('/compositions', methods=['GET'])
 def get_compositions():
     compositions = Creations.query.all()
@@ -128,8 +116,8 @@ def get_compositions():
         'is_public': text.is_public
     } for text in compositions]), 200
 
-# Define the get_composition route
-@api.route('/compositions/<int:text_id>', methods=['GET'])
+# Define the get_composition route (ill use to retrieve single artist composition)
+@api.route('/compositions/<int:text_id>', methods=['GET']) 
 def get_composition(text_id):
     composition = Creations.query.get_or_404(text_id)
     return jsonify({
@@ -282,8 +270,3 @@ def submit_text():
 def get_voided_lines():
     return jsonify(stored_lines), 200
 
-# Register the Blueprint with the Flask app
-app.register_blueprint(api, url_prefix='/api')
-
-if __name__ == '__main__':
-    app.run(debug=True, port=3001)
