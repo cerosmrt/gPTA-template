@@ -105,7 +105,7 @@ def get_text(text_id):
         'is_public': text.is_public
     }), 200
 
-# Define the get_compositions route (ill use to retrieve all artist compositions)
+# Define the get_compositions route
 @api.route('/compositions', methods=['GET'])
 def get_compositions():
     compositions = Creations.query.all()
@@ -270,3 +270,26 @@ def submit_text():
 def get_voided_lines():
     return jsonify(stored_lines), 200
 
+# Define the post_compositions route (to save all artist compositions)
+@api.route('/compositions', methods=['POST'])
+def post_compositions():
+    data = request.get_json()
+
+    # Log for debugging
+    print("Received data:", data)
+    
+    # Check for required keys
+    required_keys = ['TextCreatedID', 'artist_id', 'MetaDataUsed', 'is_public']
+    for key in required_keys:
+        if key not in data:
+            return jsonify({'error': f'Missing required key: {key}'}), 400
+    
+    new_composition = Creations(
+        TextCreatedID=data['TextCreatedID'],
+        artist_id=data['artist_id'],
+        MetaDataUsed=data['MetaDataUsed'],
+        is_public=data['is_public']
+    )
+    db.session.add(new_composition)
+    db.session.commit()
+    return jsonify({'message': 'Composition created successfully'}), 201

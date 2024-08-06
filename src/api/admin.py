@@ -12,6 +12,10 @@ def setup_admin(app):
     
     # Add your models here, for example this is how we add a the Artist model to the admin
     admin.add_view(ModelView(Artist, db.session))
+    admin.add_view(ModelView(Creations, db.session))
+    admin.add_view(ModelView(BookData, db.session))
+    admin.add_view(ModelView(LineFetched, db.session))
+    admin.add_view(ModelView(LineStamped, db.session))
     # agregar resto de modelos
 
     # You can duplicate that line to add mew models
