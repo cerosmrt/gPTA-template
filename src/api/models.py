@@ -1,4 +1,7 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy # This is the database object that we will use to interact with the database
+from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
     
@@ -52,3 +55,17 @@ class LineStamped(db.Model):
     creation_id = db.Column(db.Integer, db.ForeignKey('creations.creation_id'), nullable = False)
     line_fetched_id = db.Column(db.Integer, db.ForeignKey('line_fetched.line_fetched_id'), nullable = False)
 
+class Scroll(db.Model):
+    __tablename__ = 'scrolls'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = Column(Text, nullable=True)  # Optional title
+    content = db.Column(db.Text, nullable=False)
+    artist_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __init__(self, content, artist_id, title):
+        self.content = content
+        self.artist_id = artist_id
+        self.title = title

@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, Artist, Creations, BookData, LineFetched, LineStamped #falta agregar resto de modelos
+from .models import db, Artist, Creations, BookData, LineFetched, LineStamped, TextVoided, Scroll
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -16,7 +16,8 @@ def setup_admin(app):
     admin.add_view(ModelView(BookData, db.session))
     admin.add_view(ModelView(LineFetched, db.session))
     admin.add_view(ModelView(LineStamped, db.session))
-    # agregar resto de modelos
+    admin.add_view(ModelView(TextVoided, db.session))
+    admin.add_view(ModelView(Scroll, db.session))
 
     # You can duplicate that line to add mew models
     # admin.add_view(ModelView(YourModelName, db.session))

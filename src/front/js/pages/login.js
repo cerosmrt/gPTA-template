@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import the Link and use
 // Trigger handleSubmit function on form submission.
 // Ensure email and password are not empty before sending the request.
 // Fetch data from the API endpoint (/api/login) with email and password in the request body.
-// On successful login, store the returned token in sessionStorage.
+// On successful login, store the returned token in localStorage.
 // On failure, display an error message.
 // Redirect to the /private route upon successful login.
 
@@ -47,8 +47,13 @@ export const Login = () => {
       if (response.ok) {
         // Check if the response is OK.
         const data = await response.json(); // Parse the response data.
-        sessionStorage.setItem("token", data.token); // Store the token in the sessionStorage.
+        console.log("Response Data:", data); // Debugging line.
+        localStorage.setItem("token", data.token); // Store the token in the localStorage.
+        localStorage.setItem("name", data.name); // Store the name in the localStorage.
+        localStorage.setItem("artist_id", data.artist_id); // Store the name in the localStorage.
         console.log("Token:", data.token); // Debugging line.
+        console.log("Artist Name:", data.name); // Debugging line.
+        console.log("Artist ID:", data.artist_id); // Debugging line.
         navigate("/voider"); // Redirect to the /voider route.
       } else {
         // If the response is not OK.

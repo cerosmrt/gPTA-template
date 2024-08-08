@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB, and Adding the endpoints.
 """
 from flask import Flask, request, jsonify, Blueprint, render_template_string
-from api.models import db, Artist, Creations, BookData, TextVoided, LineStamped, LineFetched
+from api.models import db, Artist, Creations, BookData, TextVoided, LineStamped, LineFetched, Scroll
 from api.utils import APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -69,7 +69,7 @@ def login():
             token = create_access_token(identity=artist.artist_id)
             # Log the artist's ID, name, and token
             print(f"Artist ID: {artist.artist_id}, Name: {artist.name}, Token: {token}")
-            return jsonify({'token': token}), 200
+            return jsonify({'token': token, 'name': artist.name, 'artist_id': artist.artist_id}), 200
 
     return jsonify({'msg': 'Wrong name or password'}), 401
 
@@ -346,12 +346,12 @@ def delete_composition(composition_id):
         return jsonify({'msg': 'Composition deleted successfully'}), 200
     return jsonify({'msg': 'Composition not found'}), 404
 
-# Define the create_composition route (to save a new composition)
-@api.route('/artist/chest/scrolls', methods=['POST'])
+# Define the create_scroll route (to save a new composition)
+@api.route('/<int:artist_id>/chest/scrolls', methods=['POST'])
 @jwt_required()
-def create_scroll():
+def create_scroll(artist_id):
     data = request.get_json()
-    if not data:
+    if not data or not data.get('content'): 
         return jsonify({'msg': 'Missing data'}), 400
     
     content = data.get('content')
@@ -359,12 +359,14 @@ def create_scroll():
         return jsonify({'msg': 'Content required'}), 400
     
     artist_id = get_jwt_identity()
-    new_scroll = Creations(
-        content=data['content'],
-        artist_id=artist_id
+    new_scroll = Scroll(
+        content=content,
+        artist_id=artist_id,
+        title="0"
     )
     db.session.add(new_scroll)
     db.session.commit()
-    return jsonify({'msg': 'Scroll created successfully'}), 201
+    return jsonify({'msg': 'Scroll created successfully', 'scroll_id': new_scroll.id}), 201
+
 
 # @api.route('/artist/chest/scrolls/<int:scroll_id>', methods=['PUT'])

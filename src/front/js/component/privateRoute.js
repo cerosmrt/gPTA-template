@@ -14,7 +14,7 @@ const PrivateRoute = ({ component: Component }) => {
         // API call to fetch user details
         const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
@@ -33,15 +33,15 @@ const PrivateRoute = ({ component: Component }) => {
     fetchUserDetails(); // Call the function to fetch user details
   }, []);
 
-  // Effect to store user details in sessionStorage
+  // Effect to store user details in localStorage
   useEffect(() => {
-    sessionStorage.setItem("userId", userId); // Store user ID
-    sessionStorage.setItem("username", username); // Store username
+    localStorage.setItem("userId", userId); // Store user ID
+    localStorage.setItem("username", username); // Store username
   }, [userId, username]);
 
   // Effect to check if the user is authenticated
   useEffect(() => {
-    const token = sessionStorage.getItem("token"); // Retrieve token from sessionStorage
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
     setIsAuthenticated(!!token); // Update authentication state
   }, []);
 

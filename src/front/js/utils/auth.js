@@ -4,7 +4,7 @@ export const fetchUserDetails = async () => {
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/api/user`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     if (!response.ok) {
@@ -32,7 +32,7 @@ export const loginUser = async (email, password) => {
     });
     if (response.ok) {
       const data = await response.json();
-      sessionStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token);
       return data.token;
     }
   } catch (error) {
