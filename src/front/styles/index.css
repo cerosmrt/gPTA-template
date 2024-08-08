@@ -1,16 +1,12 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    /* border: 1px solid red; */
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* border: 1px solid red; */
+}
 
 body {
-    background-color: black;
-    color: white;
-    padding-top: 60px;
+  background-color: black;
+  color: white;
+  padding-top: 60px;
 }
-  

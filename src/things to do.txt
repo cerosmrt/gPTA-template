@@ -1,0 +1,9 @@
+in /voider view, when pressed downkey, fetch random paragraph. When pressed upkey, fetch previous line
+in /editor view, when pressed downkey, fetch random paragraph. When pressed upkey, fetch previous line
+from voider, i will type keywords to go to different pages. 
+/voider 
+/scrolls 
+/editor 
+/artist 
+make the fetch paragraph display as editable input in voider and editor page
+

@@ -1,57 +1,69 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../../styles/register.css";
+import React, { useState } from "react"; // Import the useState hook.
+import { Link, useNavigate } from "react-router-dom"; // Import the Link and useNavigate components from react-router-dom.
+// import "../../styles/register.css";
 
 export const Register = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
-  const history = useNavigate();
+  // Register component
+  const [email, setEmail] = useState(""); // State variable email and setEmail function
+  const [username, setUsername] = useState(""); // State variable username and setUsername function
+  const [password, setPassword] = useState(""); // State variable password and setPassword function
+  const [errors, setErrors] = useState({}); // State variable errors and setErrors function
+  const [message, setMessage] = useState(""); // State variable message and setMessage function
+  const history = useNavigate(); // Navigate function using the useNavigate hook
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    // handlePasswordChange function
+    setPassword(e.target.value); // Update the password state variable
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // handleSubmit function
+    e.preventDefault(); // Prevent the default form submission behavior
 
-    setErrors({});
-    setMessage("");
+    setErrors({}); // Reset the errors state variable
+    setMessage(""); // Reset the message state variable
 
     if (!email || !username || !password) {
-      setErrors({ form: "All fields are required" });
-      return;
-    }
+      // Check if email, username, or password are empty
+      setErrors({ form: "All fields are required" }); // Set the form error message
+      return; // Exit the function
+    } // End the if statement
 
     console.log("Backend URL:", process.env.BACKEND_URL); // Debugging line
 
     try {
+      // Try to execute the following code
       const response = await fetch(`${process.env.BACKEND_URL}/api/register`, {
-        method: "POST",
+        // Fetch the register API endpoint
+        method: "POST", // Use the POST method
         headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, name: username, password }),
-      });
+          // Set the request headers
+          "Content-Type": "application/json", // Set the content type to JSON
+        }, // End the headers
+        body: JSON.stringify({ email, name: username, password }), // Set the request body to the email, username, and password
+      }); // End the fetch function
 
       if (response.ok) {
-        setMessage("Registration successful!");
+        // Check if the response is OK
+        setMessage("Registration successful!"); // Set the success message
         setTimeout(() => {
-          history("/login");
-        }, 2000);
+          // Set a timeout function
+          history("/login"); // Redirect to the /login route
+        }, 2000); // Set the timeout duration
       } else {
-        const errorData = await response.json();
-        setErrors({ form: errorData.msg || "Registration failed" });
-      }
+        // If the response is not OK
+        const errorData = await response.json(); // Parse the error data
+        setErrors({ form: errorData.msg || "Registration failed" }); // Set the error message
+      } // End the if statement
     } catch (error) {
+      // Catch any errors
       console.error("Error:", error); // Debugging line
-      setErrors({ form: "An error occurred. Please try again." });
-    }
-  };
+      setErrors({ form: "An error occurred. Please try again." }); // Set the error message
+    } // End the try-catch block
+  }; // End the handleSubmit function
 
   return (
+    // Return the following content
     <div className="register-container">
       <div className="signup-form">
         <h2>Create</h2>
@@ -68,7 +80,9 @@ export const Register = () => {
               required
               autoFocus
             />
-            {errors.username && <div className="error-feedback">{errors.username}</div>}
+            {errors.username && (
+              <div className="error-feedback">{errors.username}</div>
+            )}
           </div>
 
           <div className="form-group">
@@ -82,7 +96,9 @@ export const Register = () => {
               className={errors.email ? "invalid" : ""}
               required
             />
-            {errors.email && <div className="error-feedback">{errors.email}</div>}
+            {errors.email && (
+              <div className="error-feedback">{errors.email}</div>
+            )}
           </div>
 
           <div className="form-group">
@@ -96,7 +112,9 @@ export const Register = () => {
               className={errors.password ? "invalid" : ""}
               required
             />
-            {errors.password && <div className="error-feedback">{errors.password}</div>}
+            {errors.password && (
+              <div className="error-feedback">{errors.password}</div>
+            )}
           </div>
 
           <div className="button-wrapper">

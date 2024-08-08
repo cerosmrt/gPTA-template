@@ -61,13 +61,14 @@ def login():
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'msg': 'All fields are required'}), 400
     artist = Artist.query.filter_by(email=data['email']).first()
+    # artist = Artist.query.get(email=data['email']).first()
     print(artist)
     if artist:
-        # Comparar la contraseña proporcionada con la contraseña almacenada
-        # print(artist.password)
-        # print(data.password)
+        # Compare the provided password with the stored password
         if check_password_hash(artist.password, data['password']):
             token = create_access_token(identity=artist.artist_id)
+            # Log the artist's ID, name, and token
+            print(f"Artist ID: {artist.artist_id}, Name: {artist.name}, Token: {token}")
             return jsonify({'token': token}), 200
 
     return jsonify({'msg': 'Wrong name or password'}), 401
@@ -76,9 +77,12 @@ def login():
 @api.route('/reset-password', methods=['POST'])
 def reset_password():
     data = request.get_json()
-    artist = Artist.query.filter_by(email=data['name']).first()
+    email = data.get('email')
+    new_password = data.get('new_password')
+
+    artist = Artist.query.filter_by(email=data['email']).first()
     if artist:
-        hashed_password = generate_password_hash(data['new_password'], method='sha256')
+        hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
         artist.password = hashed_password
         db.session.commit()
         return jsonify({'msg': 'Password updated'}), 200
@@ -90,9 +94,12 @@ def reset_password():
 def save_text():
     data = request.get_json()
     user_id = get_jwt_identity()
+    print(f"User ID: {user_id}")
+    print(f"Data: {data}")
     new_text = Creations(artist_id=user_id, MetaDataUser=data['metadata'], is_public=data.get('is_public', True))
     db.session.add(new_text)
     db.session.commit()
+    print("Text saved successfully")
     return jsonify({"message": "Text saved successfully"}), 201
 
 # Define the get_text route
@@ -105,27 +112,6 @@ def get_text(text_id):
         'is_public': text.is_public
     }), 200
 
-# Define the get_compositions route
-@api.route('/compositions', methods=['GET'])
-def get_compositions():
-    compositions = Creations.query.all()
-    return jsonify([{
-        'TextCreatedID': text.TextCreatedID,
-        'artist_id': text.artist_id,
-        'MetaDataUsed': text.MetaDataUsed,
-        'is_public': text.is_public
-    } for text in compositions]), 200
-
-# Define the get_composition route (ill use to retrieve single artist composition)
-@api.route('/compositions/<int:text_id>', methods=['GET']) 
-def get_composition(text_id):
-    composition = Creations.query.get_or_404(text_id)
-    return jsonify({
-        'TextCreatedID': composition.TextCreatedID,
-        'artist_id': composition.artist_id,
-        'MetaDataUsed': composition.MetaDataUsed,
-        'is_public': composition.is_public
-    }), 200
 
 # Define the get_books route
 @api.route('/books', methods=['GET'])
@@ -257,8 +243,8 @@ def save_text_to_db(text):
     stored_lines.append({"text": text})  # Add the text to the simulated database
 
 # submit-text route/tested on postman
-@api.route('/submit-text', methods=['POST'])
-def submit_text():
+@api.route('/voided-lines', methods=['POST'])
+def void_new_lines():
     data = request.get_json()
     text = data.get('text')
         
@@ -270,26 +256,115 @@ def submit_text():
 def get_voided_lines():
     return jsonify(stored_lines), 200
 
-# Define the post_compositions route (to save all artist compositions)
-@api.route('/compositions', methods=['POST'])
-def post_compositions():
-    data = request.get_json()
 
-    # Log for debugging
-    print("Received data:", data)
+# Define the fetch_user_details route
+@api.route('/user', methods=['GET'])
+@jwt_required()  # Ensure that the user is authenticated with a valid JWT token
+def fetch_user_details():
+    # Get the user ID from the JWT token
+    user_id = get_jwt_identity()
     
-    # Check for required keys
-    required_keys = ['TextCreatedID', 'artist_id', 'MetaDataUsed', 'is_public']
-    for key in required_keys:
-        if key not in data:
-            return jsonify({'error': f'Missing required key: {key}'}), 400
+    # Retrieve the user details from the database using the user ID
+    user = Artist.query.get_or_404(user_id)
     
+    # Check if the user exists
+    if not user:
+        # Return a 404 error if the user is not found
+        return jsonify({'msg': 'User not found'}), 404
+    
+    # Return the user details as a JSON response
+    return jsonify({
+        'name': user.name,
+        'email': user.email,
+        'is_active': user.is_active
+    }), 200
+
+# Define the get_compositions route
+@api.route('/compositions', methods=['GET'])
+@jwt_required()
+def get_compositions():
+    artist_id = get_jwt_identity()
+    compositions = Creations.query.filter_by(artist_id=artist_id).all()
+    return jsonify([{
+        'id': comp.id,
+        'title': comp.title,
+        'content': comp.content
+    } for comp in compositions]), 200
+
+# Define the get_composition route (to retrieve a single artist composition)
+@api.route('/compositions/<int:composition_id>', methods=['GET'])
+@jwt_required()
+def get_composition(composition_id):
+    artist_id = get_jwt_identity()
+    composition = Creations.query.filter_by(id=composition_id, artist_id=artist_id).first()
+    if composition:
+        return jsonify({
+            'id': composition.id,
+            'title': composition.title,
+            'content': composition.content
+        }), 200
+    return jsonify({'msg': 'Composition not found'}), 404
+
+# Define the create_composition route (to save a new composition)
+@api.route('/compositions', methods=['POST'])
+@jwt_required()
+def create_composition():
+    data = request.get_json()
+    artist_id = get_jwt_identity()
     new_composition = Creations(
-        TextCreatedID=data['TextCreatedID'],
-        artist_id=data['artist_id'],
-        MetaDataUsed=data['MetaDataUsed'],
-        is_public=data['is_public']
+        title=data['title'],
+        content=data['content'],
+        artist_id=artist_id
     )
     db.session.add(new_composition)
     db.session.commit()
-    return jsonify({'message': 'Composition created successfully'}), 201
+    return jsonify({'msg': 'Composition created successfully'}), 201
+
+# Define the update_composition route (to update an existing composition)
+@api.route('/compositions/<int:composition_id>', methods=['PUT'])
+@jwt_required()
+def update_composition(composition_id):
+    data = request.get_json()
+    artist_id = get_jwt_identity()
+    composition = Creations.query.filter_by(id=composition_id, artist_id=artist_id).first()
+    if composition:
+        composition.title = data['title']
+        composition.content = data['content']
+        db.session.commit()
+        return jsonify({'msg': 'Composition updated successfully'}), 200
+    return jsonify({'msg': 'Composition not found'}), 404
+
+# Define the delete_composition route (to delete an existing composition)
+@api.route('/compositions/<int:composition_id>', methods=['DELETE'])
+@jwt_required()
+def delete_composition(composition_id):
+    artist_id = get_jwt_identity()
+    composition = Creations.query.filter_by(id=composition_id, artist_id=artist_id).first()
+    if composition:
+        db.session.delete(composition)
+        db.session.commit()
+        return jsonify({'msg': 'Composition deleted successfully'}), 200
+    return jsonify({'msg': 'Composition not found'}), 404
+
+# Define the create_composition route (to save a new composition)
+@api.route('/artist/chest/scrolls', methods=['POST'])
+@jwt_required()
+def create_scroll():
+    data = request.get_json()
+    if not data:
+        return jsonify({'msg': 'Missing data'}), 400
+    
+    content = data.get('content')
+    if not content: 
+        return jsonify({'msg': 'Content required'}), 400
+    
+    artist_id = get_jwt_identity()
+    new_scroll = Creations(
+        content=data['content'],
+        artist_id=artist_id
+    )
+    db.session.add(new_scroll)
+    db.session.commit()
+    return jsonify({'msg': 'Scroll created successfully'}), 201
+
+# @api.route('/artist/chest/scrolls/<int:scroll_id>', methods=['PUT'])

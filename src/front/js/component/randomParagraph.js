@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import "../../styles/randomParagraph.css";
 import { Context } from "../store/appContext";
+// import "../../styles/randomParagraph.css";
 
 const RandomParagraph = () => {
   const { actions } = useContext(Context);

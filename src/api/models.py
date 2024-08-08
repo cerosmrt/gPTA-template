@@ -12,11 +12,13 @@ class Artist(db.Model):
     creations = db.relationship('Creations', backref='artists', lazy=True)
 
 class Creations(db.Model):
-    __tablename__='creations'
+    __tablename__ = 'creations'
     creation_id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'), nullable = False)
-    meta_data_used = db.Column(db.String(255), nullable = False)
-    is_public = db.Column(db.Boolean, nullable = False)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.artist_id'), nullable=False)
+    meta_data_used = db.Column(db.String(255), nullable=False)
+    is_public = db.Column(db.Boolean, nullable=False)
     lines_stamped = db.relationship('LineStamped', backref='creations', lazy=True)
 
 class BookData(db.Model):
@@ -49,3 +51,4 @@ class LineStamped(db.Model):
     line_stamped_id = db.Column(db.Integer, primary_key=True)
     creation_id = db.Column(db.Integer, db.ForeignKey('creations.creation_id'), nullable = False)
     line_fetched_id = db.Column(db.Integer, db.ForeignKey('line_fetched.line_fetched_id'), nullable = False)
+
