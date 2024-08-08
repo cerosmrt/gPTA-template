@@ -6,4 +6,5 @@ from voider, i will type keywords to go to different pages.
 /editor 
 /artist 
 make the fetch paragraph display as editable input in voider and editor page
+customized routes
 

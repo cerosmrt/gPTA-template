@@ -16,7 +16,7 @@ const handleSave = async (editorState) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          content: editorState,
+          content: formatEditorState(editorState),
         }),
       }
     );
@@ -30,6 +30,14 @@ const handleSave = async (editorState) => {
   } catch (error) {
     console.log("Error saving scroll:", error);
   }
+};
+
+const formatEditorState = (editorState) => {
+  const formattedContent = editorState.replace(
+    /<p class="ql-align-center">\s*(.*?)\s*<\/p>/g,
+    "$1."
+  );
+  return formattedContent.trim();
 };
 
 const SaveButton = ({ editorState }) => {
