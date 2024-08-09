@@ -394,5 +394,20 @@ def get_scrolls(artist_id):
 
     return jsonify(scrolls_data), 200  # Return the formatted scrolls data as JSON with a 200 OK status
 
+@api.route('/<int:artist_id>/chest/scrolls/<int:scroll_id>', methods=['DELETE'])  # Define the route for DELETE requests to delete a specific scroll
+@jwt_required()  # Require a valid JWT token to access this endpoint
+def delete_scroll(artist_id, scroll_id):
+    jwt_artist_id = get_jwt_identity()  # Get the artist ID from the JWT token
+    if artist_id != jwt_artist_id:  # Check if the artist ID from the URL matches the JWT artist ID
+        return jsonify({'msg': 'Artist ID mismatch'}), 403  # Return an error if IDs do not match
+
+    scroll = Scroll.query.filter_by(id=scroll_id, artist_id=artist_id).first()  # Query the database to get the specific scroll
+    if not scroll:  # Check if the scroll exists
+        return jsonify({'msg': 'Scroll not found'}), 404  # Return an error if the scroll does not exist
+
+    db.session.delete(scroll)  # Delete the scroll from the database
+    db.session.commit()  # Commit the changes to the database
+
+    return jsonify({'msg': 'Scroll deleted successfully'}), 200  # Return a success message
 
 # @api.route('/artist/chest/scrolls/<int:scroll_id>', methods=['PUT'])
