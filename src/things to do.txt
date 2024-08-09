@@ -7,4 +7,14 @@ from voider, i will type keywords to go to different pages.
 /artist 
 make the fetch paragraph display as editable input in voider and editor page
 customized routes
-
+make the editor refresh in real-time whenever a new line is inputted in /voider, you can use Server-Sent Events (SSE). 
+// The scrolls should be displayed in a list.
+// The scrolls should be clickable.
+// The scrolls should be editable.
+// The scrolls should be deletable.
+ - build an api to handle emails? 
+ - reset password needs to be done
+agregar GET METHOD TO Routes for scroll fetching in /chest page
+decide how my documents should be saved
+jona reportando
+kkkkkkx

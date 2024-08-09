@@ -43,6 +43,7 @@ const Layout = () => {
             <Route element={<Voider />} path="/voider" />
             <Route element={<Void />} path="/void" />
             <Route element={<Chest />} path="/chest" />
+            {/* <Route element={<Chest />} path="/chest/:id" /> */}
           </Routes>
           {/* <Footer /> */}
         </ScrollToTop>

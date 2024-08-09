@@ -1,43 +1,41 @@
 import React, { useEffect, useState } from "react";
 
-// This component should render in its page a list of scrolls that can be clicked to edit.
-// The scrolls should be fetched from the database `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls`.
-// The scrolls should be displayed in a list.
-// The scrolls should be clickable.
-// The scrolls should be editable.
-// The scrolls should be deletable.
-
-export const Chest = ({ artist_id }) => {
+export const Chest = () => {
   // State to store the fetched scrolls
   const [scrolls, setScrolls] = useState([]);
   // State to store any error that occurs during fetching
   const [error, setError] = useState(null);
 
+  const artist_id = localStorage.getItem("artist_id");
+  console.log(artist_id);
+
   // useEffect hook to fetch scrolls from the database when the component mounts or artist_id changes
   useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls`)
-      .then((response) => response.json())
+    fetch(`${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        // Log the response to inspect it
+        console.log("Response:", response);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
-        // Update the scrolls state with the fetched data
         setScrolls(data);
+        console.log("Scrolls belonging to artist_id:", artist_id, data);
       })
       .catch((error) => {
+        console.error("Error fetching scrolls:", error);
         // Update the error state if an error occurs
         setError(error);
       });
   }, [artist_id]);
-
-  // Function to handle editing a scroll
-  const handleEdit = (scrollId) => {
-    // Implement edit functionality here
-    console.log(`Edit scroll with ID: ${scrollId}`);
-  };
-
-  // Function to handle deleting a scroll
-  const handleDelete = (scrollId) => {
-    // Implement delete functionality here
-    console.log(`Delete scroll with ID: ${scrollId}`);
-  };
 
   // If an error occurs during fetching, display an error message
   if (error) {
@@ -51,8 +49,7 @@ export const Chest = ({ artist_id }) => {
       <ul>
         {scrolls.map((scroll) => (
           <li key={scroll.id}>
-            <span onClick={() => handleEdit(scroll.id)}>{scroll.name}</span>
-            <button onClick={() => handleDelete(scroll.id)}>Delete</button>
+            <span>{scroll.title}</span>
           </li>
         ))}
       </ul>

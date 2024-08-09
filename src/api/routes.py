@@ -1,6 +1,9 @@
 """
 This module takes care of starting the API Server, Loading the DB, and Adding the endpoints.
 """
+
+import re 
+import json
 from flask import Flask, request, jsonify, Blueprint, render_template_string
 from api.models import db, Artist, Creations, BookData, TextVoided, LineStamped, LineFetched, Scroll
 from api.utils import APIException
@@ -346,7 +349,11 @@ def delete_composition(composition_id):
         return jsonify({'msg': 'Composition deleted successfully'}), 200
     return jsonify({'msg': 'Composition not found'}), 404
 
-# Define the create_scroll route (to save a new composition)
+def format_editor_state(editor_state):
+    # Use regular expression to replace the HTML tags
+    formatted_content = re.sub(r'<p class="ql-align-center">\s*(.*?)\s*</p>', r'\1.', editor_state).strip()
+    return formatted_content
+
 @api.route('/<int:artist_id>/chest/scrolls', methods=['POST'])
 @jwt_required()
 def create_scroll(artist_id):
@@ -358,15 +365,34 @@ def create_scroll(artist_id):
     if not content: 
         return jsonify({'msg': 'Content required'}), 400
     
-    artist_id = get_jwt_identity()
+    # Format the content
+    formatted_content = format_editor_state(content)
+    
+    # Get artist_id from JWT if it's not passed in the URL (optional, based on your design)
+    jwt_artist_id = get_jwt_identity()
+    if artist_id != jwt_artist_id:
+        return jsonify({'msg': 'Artist ID mismatch'}), 403
+
     new_scroll = Scroll(
-        content=content,
+        content=formatted_content,
         artist_id=artist_id,
         title="0"
     )
     db.session.add(new_scroll)
     db.session.commit()
     return jsonify({'msg': 'Scroll created successfully', 'scroll_id': new_scroll.id}), 201
+
+@api.route('/<int:artist_id>/chest/scrolls', methods=['GET'])  # Define the route for GET requests to fetch scrolls for a specific artist
+@jwt_required()  # Require a valid JWT token to access this endpoint
+def get_scrolls(artist_id):
+    jwt_artist_id = get_jwt_identity()  # Get the artist ID from the JWT token
+    if artist_id != jwt_artist_id:  # Check if the artist ID from the URL matches the JWT artist ID
+        return jsonify({'msg': 'Artist ID mismatch'}), 403  # Return an error if IDs do not match
+
+    scrolls = Scroll.query.filter_by(artist_id=artist_id).all()  # Query the database to get all scrolls for the specified artist ID
+    scrolls_data = [{'id': scroll.id, 'content': scroll.content, 'title': scroll.title} for scroll in scrolls]  # Format scrolls data into a list of dictionaries
+
+    return jsonify(scrolls_data), 200  # Return the formatted scrolls data as JSON with a 200 OK status
 
 
 # @api.route('/artist/chest/scrolls/<int:scroll_id>', methods=['PUT'])

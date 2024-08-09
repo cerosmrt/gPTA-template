@@ -49,10 +49,10 @@ export const Login = () => {
         const data = await response.json(); // Parse the response data.
         console.log("Response Data:", data); // Debugging line.
         localStorage.setItem("token", data.token); // Store the token in the localStorage.
-        localStorage.setItem("name", data.name); // Store the name in the localStorage.
+        // localStorage.setItem("name", data.name); // Store the name in the localStorage.
         localStorage.setItem("artist_id", data.artist_id); // Store the name in the localStorage.
         console.log("Token:", data.token); // Debugging line.
-        console.log("Artist Name:", data.name); // Debugging line.
+        // console.log("Artist Name:", data.name); // Debugging line.
         console.log("Artist ID:", data.artist_id); // Debugging line.
         navigate("/voider"); // Redirect to the /voider route.
       } else {

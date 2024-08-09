@@ -4,59 +4,62 @@ import "react-quill/dist/quill.snow.css";
 import RandomParagraph from "../component/randomParagraph";
 import SaveButton from "../component/save";
 import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 
 export function Editor() {
-    const [editorState, setEditorState] = useState("");
-    const quillRef = useRef(null);
-    const { store } = useContext(Context);
+  const [editorState, setEditorState] = useState("");
+  const quillRef = useRef(null);
+  const { store } = useContext(Context);
+  const artist_id = localStorage.getItem("artist_id");
 
-    useEffect(() => {
-        const fetchLines = async () => {
-            try {
-                const response = await fetch(
-                    `${process.env.BACKEND_URL}/api/voided-lines`
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to fetch voided lines");
-                }
-                const data = await response.json();
-                const formattedText = data
-                    .map((line) => `${line.text}`)
-                    .join("<br>.<br>");
-                setEditorState(formattedText);
-            } catch (error) {
-                console.log("Fetch error:", error);
-            }
-        };
-
-        fetchLines();
-    }, []);
-
-    const modules = {
-        toolbar: false,
+  useEffect(() => {
+    const fetchLines = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/voided-lines`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch voided lines");
+        }
+        const data = await response.json();
+        const formattedText = data
+          .map((line) => `${line.text}`)
+          .join("<br>.<br>");
+        setEditorState(formattedText);
+      } catch (error) {
+        console.log("Fetch error:", error);
+      }
     };
 
-    useEffect(() => {
-        if (quillRef.current) {
-            const editor = quillRef.current.getEditor();
-            editor.clipboard.dangerouslyPasteHTML(editorState);
-            editor.formatLine(0, editor.getLength(), "align", "center");
-        }
-    }, [editorState]);
+    fetchLines();
+  }, []);
 
-    return (
-        <div tabIndex={0}>
-            <RandomParagraph className="randomParagraphButton" />
-            <SaveButton editorState={editorState} />
-            <ReactQuill
-                className="invisible-editor"
-                ref={quillRef}
-                theme="snow"
-                value={editorState}
-                modules={modules}
-                onChange={(value) => setEditorState(value)}
-            />
-            <p>{store.paragraph}</p>
-        </div>
-    );
+  const modules = {
+    toolbar: false,
+  };
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      editor.clipboard.dangerouslyPasteHTML(editorState);
+      editor.formatLine(0, editor.getLength(), "align", "center");
+    }
+  }, [editorState]);
+
+  return (
+    <div tabIndex={0}>
+      <RandomParagraph className="randomParagraphButton" />
+      <SaveButton editorState={editorState} />
+      <ReactQuill
+        className="invisible-editor"
+        ref={quillRef}
+        theme="snow"
+        value={editorState}
+        modules={modules}
+        onChange={(value) => setEditorState(value)}
+      />
+      <p>{store.paragraph}</p>
+      <Link to={`/${artist_id}/chest/${scroll.id}`}></Link>
+    </div>
+  );
 }
