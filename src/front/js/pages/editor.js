@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react"; // Impor
 import ReactQuill from "react-quill"; // Import the ReactQuill component for rich text editing.
 import "react-quill/dist/quill.snow.css"; // Import the Quill CSS for the editor's styling.
 import { Context } from "../store/appContext"; // Import the Context from your application state management.
-import { Link } from "react-router-dom"; // Import the Link component for navigation.
+import { Link, useParams } from "react-router-dom"; // Import the Link component for navigation.
 import ParagraphFetcher from "../component/paragraphFetcher"; // Import custom component for fetching paragraphs.
 import SaveButton from "../component/save"; // Import the SaveButton component.
 import { handleSave } from "../component/save"; // Import the handleSave function.
@@ -16,6 +16,36 @@ export function Editor() {
   const [isEditing, setIsEditing] = useState(false); // State to track if the editor is currently being edited.
   const intervalRef = useRef(null); // Ref to store interval for periodic actions.
   const [selectedRange, setSelectedRange] = useState(null); // State to track the selected text range in the editor.
+  const { scrollId } = useParams(); // Retrieve the scroll ID from the URL params
+
+  useEffect(() => {
+    const fetchScroll = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls/${scrollId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch scroll");
+        }
+        const data = await response.json();
+        setEditorState(data.title);
+        setInitialContentSet(true);
+      } catch (error) {
+        console.log("Fetch error:", error);
+      }
+    };
+
+    if (scrollId) {
+      fetchScroll();
+    }
+  }, [scrollId, artist_id]);
 
   useEffect(() => {
     const fetchLines = async () => {
@@ -62,7 +92,6 @@ export function Editor() {
     console.log("Editor content changed:", value);
     setEditorState(value); // Update the editorState when the content changes.
     setParagraph(value); // Update global state with the new content.
-    handleSave(value); // Save the content.
     setIsEditing(true); // Mark as editing.
     clearInterval(intervalRef.current); // Clear the fetch interval during editing.
 
@@ -72,6 +101,12 @@ export function Editor() {
       console.log("Current selection range on change:", range);
       setSelectedRange(range); // Save the selected range.
     }
+
+    if (intervalRef.current) clearTimeout(intervalRef.current); // Clear the interval when content changes.
+
+    intervalRef.current = setTimeout(() => {
+      handleSave(value, scrollId); // Save the content after a delay. Use PUT if scrollId exists.
+    }, 2000); // Delay in milliseconds before saving the content.
   };
 
   const handleBlur = () => {
@@ -140,7 +175,7 @@ export function Editor() {
         modules={modules}
         onChange={handleChange} // Handle changes in the editor content
       />
-      <Link to={`/${artist_id}/chest/${scroll.id}`}>cocacola</Link>{" "}
+      <Link to={`/${artist_id}/chest/${scrollId}`}>cocacola</Link>{" "}
       {/* Link to the chest page */}
     </div>
   );

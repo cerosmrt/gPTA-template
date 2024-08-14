@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/chest.css";
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook from React Router
 
 export const Chest = () => {
   // State to store the fetched scrolls
   const [scrolls, setScrolls] = useState([]);
   // State to store any error that occurs during fetching
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   // Retrieve artist_id from local storage
   const artist_id = localStorage.getItem("artist_id");
@@ -68,13 +70,17 @@ export const Chest = () => {
       });
   };
 
+  const handleClick = (scrollId) => {
+    navigate(`/editor/${scrollId}`);
+  };
+
   // Render the list of scrolls
   return (
     <div className="homepageContainer">
       <h1>Scrolls</h1>
       <ul>
         {scrolls.map((scroll) => (
-          <li key={scroll.id}>
+          <li key={scroll.id} onClick={() => handleClick(scroll.id)}>
             <span>{scroll.title}</span>
             <button
               onClick={(e) => {
