@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Import the useState hook.
 import { Link, useNavigate } from "react-router-dom"; // Import the Link and useNavigate components from react-router-dom.
-// import "../../styles/register.css";
+import "../../styles/register.css";
 
 export const Register = () => {
   // Register component
@@ -126,9 +126,8 @@ export const Register = () => {
         {errors.form && <div className="error-feedback">{errors.form}</div>}
         {message && <div className="success-feedback">{message}</div>}
         <div className="links">
-          <p>
-            Already an artist? <Link to="/login">Login</Link>
-          </p>
+          <p>Already an artist?</p>
+          <Link to="/login">Login</Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-// import "../../styles/randomParagraph.css";
+import "../../styles/paragraphFetcher.css";
 
-const RandomParagraph = () => {
+const ParagraphFetcher = () => {
   const { actions } = useContext(Context);
 
   const fetchParagraph = () => {
@@ -16,4 +16,4 @@ const RandomParagraph = () => {
   );
 };
 
-export default RandomParagraph;
+export default ParagraphFetcher;

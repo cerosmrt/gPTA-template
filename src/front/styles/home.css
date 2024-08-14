@@ -1,31 +1,61 @@
 /* Styles for the main container of the homepage */
 .homepageContainer {
-    padding: 20px; /* Adds padding inside the container */
-    /* background-color: #f8f9fa4d; Light background color */
-    text-align: center; /* Centers the text inside the container */
+  padding: 20px; /* Adds padding inside the container */
+  /* background-color: #f8f9fa4d; Light background color */
+  text-align: center; /* Centers the text inside the container */
 }
 
 /* Styles for the main heading inside the homepage container */
 .homepageContainer h1 {
-    color: #333; /* Sets the text color */
-    font-size: 2.5em; /* Sets the font size */
-    margin-bottom: 20px; /* Adds space below the heading */
-    margin-left: auto; /* Centers the heading horizontally */
-    margin-right: auto; /* Centers the heading horizontally */
+  color: rgb(128, 0, 0); /* Sets the text color */
+  font-size: 2.5em; /* Sets the font size */
+  margin-bottom: 20px; /* Adds space below the heading */
+  margin-left: auto; /* Centers the heading horizontally */
+  margin-right: auto; /* Centers the heading horizontally */
 }
 
 /* Styles for the alert box inside the homepage container */
 .homepageContainer .alert {
-    margin: 20px 0; /* Adds vertical margin to the alert box */
+  margin: 20px 0; /* Adds vertical margin to the alert box */
 }
 
 /* Styles for the paragraph inside the homepage container */
 .homepageContainer p {
-    font-size: 1.2em; /* Sets the font size */
-    margin-bottom: 20px; /* Adds space below the paragraph */
+  font-size: 1.2em; /* Sets the font size */
+  margin-bottom: 20px; /* Adds space below the paragraph */
 }
 
-.createSubtitle {
-    font-size: 1.5em; /* Sets the font size */
-    margin: 0px; /* Removes margin */
+.homeFooter {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: black; /* Adjust as needed */
+  text-align: center;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-bottom: 10rem; /* Adds extra padding at the bottom */
+}
+
+.homeFooter .createSubtitle {
+  font-size: 1.5em; /* Adjust as needed */
+  margin: 0;
+  color: white; /* Adjust as needed */
+}
+
+.homeFooter button {
+  color: white; /* Set text color to white */
+  background: none; /* Remove background */
+  border: none; /* Remove border */
+  padding: 10px; /* Add padding */
+  cursor: pointer; /* Change cursor to pointer */
+  font-size: 1em; /* Set font size */
+}
+
+.homeFooter button:hover {
+  color: rgb(128, 0, 0); /* Change text color to red on hover */
 }

@@ -1,17 +1,30 @@
-import React, { useContext } from "react"; // Import React library
-import InputBox from "../component/inputBox"; // Import InputBox component
-import RandomParagraph from "../component/randomParagraph"; // Importing the RandomParagraph component for rendering random paragraphs
-import { Context } from "../store/appContext"; // Import the Context object from the appContext module
-// import "../../styles/voider.css";
+import React, { useContext, useState } from "react";
+import InputBox from "../component/inputBox";
+import ParagraphFetcher from "../component/paragraphFetcher";
+import { Context } from "../store/appContext";
+import "../../styles/voider.css";
 
 export const Voider = () => {
-  // Define the Voider component
-  const { store } = useContext(Context); // Import the Context object from the appContext module
+  const { store, setParagraph } = useContext(Context);
+  const [inputValue, setInputValue] = useState(store.paragraph || "");
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSave = () => {
+    setParagraph(inputValue);
+  };
+
   return (
     <div>
       <div id="circle">
-        <RandomParagraph className="randomParagraphButton" />
-        {store.paragraph ? <p>{store.paragraph}</p> : <InputBox />}
+        <ParagraphFetcher className="randomParagraphButton" />
+        {store.paragraph ? (
+          <InputBox initialValue={store.paragraph} />
+        ) : (
+          <InputBox />
+        )}
       </div>
     </div>
   );

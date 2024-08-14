@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Import the useState hook.
 import { Link, useNavigate } from "react-router-dom"; // Import the Link and useNavigate components from react-router-dom.
-// import "../../styles/login.css";
+import "../../styles/login.css";
 
 // Retrieve username (email) and password from form inputs.
 // Trigger handleSubmit function on form submission.

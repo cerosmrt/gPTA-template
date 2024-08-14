@@ -1,6 +1,6 @@
 import React from "react"; // Importing React to use JSX and create the functional component
-import RandomParagraph from "./randomParagraph"; // Importing the RandomParagraph component for rendering random paragraphs
-// import "../../styles/navbar.css";
+import ParagraphFetcher from "./paragraphFetcher"; // Importing the ParagraphFetcher component for rendering random paragraphs
+import "../../styles/navbar.css";
 
 // Define the Navbar functional component
 export const Navbar = () => {
@@ -13,8 +13,8 @@ export const Navbar = () => {
         {/* Container for the navbar content */}
         <div className="button-container">
           {" "}
-          {/* Container for the RandomParagraph component */}
-          <RandomParagraph /> {/* Render the RandomParagraph component */}
+          {/* Container for the ParagraphFetcher component */}
+          <ParagraphFetcher /> {/* Render the ParagraphFetcher component */}
         </div>
       </div>
     </nav>

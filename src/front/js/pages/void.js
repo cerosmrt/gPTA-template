@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"; // Importa useState y useEffect de React
-// import styles from '../../styles/void.css';
+import styles from "../../styles/void.css";
 
 export const Void = () => {
   const [lines, setLines] = useState([]); // Estado para almacenar las líneas recuperadas

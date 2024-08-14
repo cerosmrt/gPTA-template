@@ -410,4 +410,22 @@ def delete_scroll(artist_id, scroll_id):
 
     return jsonify({'msg': 'Scroll deleted successfully'}), 200  # Return a success message
 
-# @api.route('/artist/chest/scrolls/<int:scroll_id>', methods=['PUT'])
+@api.route('/<int:artist_id>/chest/scrolls/<int:scroll_id>', methods=['PUT'])
+@jwt_required()
+def update_scroll(artist_id, scroll_id):
+    jwt_artist_id = get_jwt_identity()
+    if artist_id != jwt_artist_id:
+        return jsonify({'msg': 'Artist ID mismatch'}), 403
+    
+    data = request.get_json()
+    if 'content' not in data:
+        return jsonify({'msg': 'Content required'}), 400
+    
+    scroll = Scroll.query.filter_by(id=scroll_id, artist_id=artist_id).first()
+    if not scroll:
+        return jsonify({'msg': 'Scroll not found'}), 404
+    
+    scroll.content = data['content']
+    db.session.commit()
+
+    return jsonify({'msg': 'Scroll updated successfully'}), 200

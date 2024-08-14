@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import styles from "../../styles/forgot.css";
+import styles from "../../styles/forgot.css";
 
 export function Forgot() {
   const [email, setEmail] = useState("");

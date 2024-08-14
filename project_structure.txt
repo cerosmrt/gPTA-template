@@ -22,7 +22,7 @@
 │   │   │   ├── footer.js*
 │   │   │   ├── inputBox.js
 │   │   │   ├── navbar.js*
-│   │   │   ├── randomParagraph.js
+│   │   │   ├── paragraphFetcher.js
 │   │   │   ├── scrollToTop.js*
 │   │   │   └── sendTextToBackend.js
 │   │   ├── index.js*
@@ -49,7 +49,7 @@
 │       ├── inputBox.css
 │       ├── login.css
 │       ├── navbar.css
-│       ├── randomParagraph.css
+│       ├── paragraphFetcher.css
 │       ├── register.css
 │       ├── void.css
 │       └── voider.css
