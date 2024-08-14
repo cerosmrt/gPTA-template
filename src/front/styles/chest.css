@@ -1,0 +1,91 @@
+/* Chest Component CSS */
+.homepageContainer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.homepageContainer h1 {
+  text-align: center;
+  color: rgb(128, 0, 0);
+  margin-bottom: 20px;
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li span {
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%; /* Match the circle shape */
+}
+
+li span:hover {
+  color: #fff; /* Change title color to white on hover */
+}
+
+li input {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+li {
+  width: 100px; /* Fixed width */
+  height: 100px; /* Fixed height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ddd;
+  border-radius: 50%; /* Full circle */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  position: relative; /* For positioning the span */
+  text-align: center; /* Center align text in the circle */
+  margin: 10px;
+}
+
+li button {
+  background-color: #e57373;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  bottom: -40px; /* Adjusted to ensure it's underneath the circle */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+li button:hover {
+  background-color: #c62828;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
