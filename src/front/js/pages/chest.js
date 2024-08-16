@@ -42,9 +42,9 @@ export const Chest = () => {
   }, [artist_id]); // Dependency array: fetch scrolls whenever artist_id changes
 
   // Function to delete a scroll
-  const handleDelete = (scrollId) => {
+  const handleDelete = (scroll_id) => {
     fetch(
-      `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls/${scrollId}`,
+      `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls/${scroll_id}`,
       {
         method: "DELETE",
         headers: {
@@ -60,7 +60,7 @@ export const Chest = () => {
         }
         // Update state to remove the deleted scroll
         const updatedScrolls = scrolls.filter(
-          (scroll) => scroll.id !== scrollId
+          (scroll) => scroll.id !== scroll_id
         );
         setScrolls(updatedScrolls);
       })
@@ -70,8 +70,8 @@ export const Chest = () => {
       });
   };
 
-  const handleClick = (scrollId) => {
-    navigate(`/editor/${scrollId}`);
+  const handleClick = (scroll_id) => {
+    navigate(`/editor/${scroll_id}`);
   };
 
   // Render the list of scrolls

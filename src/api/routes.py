@@ -429,3 +429,16 @@ def update_scroll(artist_id, scroll_id):
     db.session.commit()
 
     return jsonify({'msg': 'Scroll updated successfully'}), 200
+
+@api.route('/<int:artist_id>/chest/scrolls/<int:scroll_id>', methods=['GET'])
+@jwt_required()
+def get_scroll(artist_id, scroll_id):
+    jwt_artist_id = get_jwt_identity()
+    if artist_id != jwt_artist_id:
+        return jsonify({'msg': 'Artist ID mismatch'}), 403
+
+    scroll = Scroll.query.filter_by(id=scroll_id, artist_id=artist_id).first()
+    if not scroll:
+        return jsonify({'msg': 'Scroll not found'}), 404
+
+    return jsonify({'title': scroll.title, 'content': scroll.content}), 200

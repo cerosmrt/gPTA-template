@@ -16,13 +16,13 @@ export function Editor() {
   const [isEditing, setIsEditing] = useState(false); // State to track if the editor is currently being edited.
   const intervalRef = useRef(null); // Ref to store interval for periodic actions.
   const [selectedRange, setSelectedRange] = useState(null); // State to track the selected text range in the editor.
-  const { scrollId } = useParams(); // Retrieve the scroll ID from the URL params
+  const { scroll_id } = useParams(); // Retrieve the scroll ID from the URL params
 
   useEffect(() => {
     const fetchScroll = async () => {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls/${scrollId}`,
+          `${process.env.BACKEND_URL}/api/${artist_id}/chest/scrolls/${scroll_id}`,
           {
             method: "GET",
             headers: {
@@ -35,17 +35,17 @@ export function Editor() {
           throw new Error("Failed to fetch scroll");
         }
         const data = await response.json();
-        setEditorState(data.title);
+        setEditorState(data.content);
         setInitialContentSet(true);
       } catch (error) {
         console.log("Fetch error:", error);
       }
     };
 
-    if (scrollId) {
+    if (scroll_id) {
       fetchScroll();
     }
-  }, [scrollId, artist_id]);
+  }, [scroll_id, artist_id]);
 
   useEffect(() => {
     const fetchLines = async () => {
@@ -105,7 +105,7 @@ export function Editor() {
     if (intervalRef.current) clearTimeout(intervalRef.current); // Clear the interval when content changes.
 
     intervalRef.current = setTimeout(() => {
-      handleSave(value, scrollId); // Save the content after a delay. Use PUT if scrollId exists.
+      handleSave(value, scroll_id); // Save the content after a delay. Use PUT if scroll_id exists.
     }, 2000); // Delay in milliseconds before saving the content.
   };
 
@@ -175,7 +175,7 @@ export function Editor() {
         modules={modules}
         onChange={handleChange} // Handle changes in the editor content
       />
-      <Link to={`/${artist_id}/chest/${scrollId}`}>cocacola</Link>{" "}
+      <Link to={`/${artist_id}/chest/${scroll_id}`}>Link</Link>{" "}
       {/* Link to the chest page */}
     </div>
   );
