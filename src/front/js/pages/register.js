@@ -66,10 +66,12 @@ export const Register = () => {
     // Return the following content
     <div className="register-container">
       <div className="signup-form">
-        <h2>Create</h2>
+        <h2>create</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Artist Name</label>
+            <label htmlFor="username">
+              artist name <br />.
+            </label>
             <input
               type="text"
               id="username"
@@ -86,7 +88,7 @@ export const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">email</label>
             <input
               type="email"
               id="email"
@@ -102,7 +104,7 @@ export const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">password</label>
             <input
               type="password"
               id="password"
@@ -126,8 +128,8 @@ export const Register = () => {
         {errors.form && <div className="error-feedback">{errors.form}</div>}
         {message && <div className="success-feedback">{message}</div>}
         <div className="links">
-          <p>Already an artist?</p>
-          <Link to="/login">Login</Link>
+          <p>already an Artist?</p>
+          <Link to="/login">login</Link>
         </div>
       </div>
     </div>
