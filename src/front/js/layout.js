@@ -17,6 +17,7 @@ import { Chest } from "./pages/chest";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import TokenRefresher from "./component/tokenRefresher";
 
 //create your first component
 const Layout = () => {
@@ -31,6 +32,7 @@ const Layout = () => {
     <div>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
+          <TokenRefresher />
           {/* <Navbar /> */}
           <Routes>
             <Route element={<Home />} path="/" />

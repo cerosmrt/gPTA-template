@@ -11,7 +11,7 @@ const ParagraphFetcher = () => {
 
   return (
     <div className="randomParagraphButton">
-      <button onClick={fetchParagraph}></button>
+      <button onClick={fetchParagraph}>▶</button>
     </div>
   );
 };

@@ -1,29 +1,40 @@
 /* Styles for the random paragraph container */
 .randomParagraphButton {
-    /* padding: 20px; Adds padding inside the container */
-    background-color: #f0f0f000; /* Light background color */
-    border-radius: 5px; /* Rounds the corners of the container */
-    /* margin: 20px 0; Adds vertical margin */
+  /* padding: 20px; Adds padding inside the container */
+  background-color: #f0f0f000; /* Light background color */
+  border-radius: 5px; /* Rounds the corners of the container */
+  /* margin: 20px 0; Adds vertical margin */
 }
 
 /* Styles for the button inside the random paragraph container */
 .randomParagraphButton button {
-    margin: 10px; /* Adds space around the buttons */
-    padding: 10px; /* Adds padding inside the buttons */
-    font-size: 1em; /* Sets the font size */
-    border: 2px solid white; /* Adds a solid border with the desired color */
-    border-radius: 50%; /* Makes the button a circle */
-    background-color: rgba(255, 255, 255, 0); /* Sets the background color to white */
-    cursor: pointer; /* Changes the cursor to a pointer on hover */
-    width: 50px; /* Sets a fixed width for the button */
-    height: 50px; /* Sets a fixed height for the button */
-    display: flex; /* Centers the text inside the circle */
-    align-items: center; /* Centers the text vertically */
-    justify-content: center; /* Centers the text horizontally */
+  margin: 10px; /* Adds space around the buttons */
+  padding: 10px; /* Adds padding inside the buttons */
+  font-size: 1em; /* Sets the font size */
+  border: 2px solid white; /* Adds a solid border with the desired color */
+  border-radius: 50%; /* Makes the button a circle */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0
+  ); /* Sets the background color to white */
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
+  width: 50px; /* Sets a fixed width for the button */
+  height: 50px; /* Sets a fixed height for the button */
+  display: flex; /* Centers the text inside the circle */
+  align-items: center; /* Centers the text vertically */
+  justify-content: center; /* Centers the text horizontally */
 }
 
 /* Styles for the button when hovered */
 .randomParagraphButton button:hover {
-    background-color: rgba(67, 67, 67, 0.238); /* Changes the background color on hover */
-    color: white; /* Changes the text color on hover */
+  background-color: rgba(
+    67,
+    67,
+    67,
+    0.238
+  ); /* Changes the background color on hover */
+  color: white; /* Changes the text color on hover */
+  border-color: rgb(128, 0, 0);
 }

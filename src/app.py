@@ -12,6 +12,7 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
 
 # from models import Person
@@ -36,6 +37,7 @@ db.init_app(app)
 
 # Configure JWT settings (optional)
 app.config['JWT_SECRET_KEY'] = 'abracadabra'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1)  # Set expiration time to 30 minutes
 # app.config['JWT_TOKEN_LOCATION'] = 'headers'
 
 # Initialize JWTManager

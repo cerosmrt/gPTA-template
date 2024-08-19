@@ -442,3 +442,11 @@ def get_scroll(artist_id, scroll_id):
         return jsonify({'msg': 'Scroll not found'}), 404
 
     return jsonify({'title': scroll.title, 'content': scroll.content}), 200
+
+@api.route('/refresh-token', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh_token():
+    current_user = get_jwt_identity()
+    new_token = create_access_token(identity=current_user)
+    print(f"New Token: {new_token}")  # Log the new token
+    return jsonify({'token': new_token}), 200

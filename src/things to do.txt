@@ -17,17 +17,5 @@ agregar GET METHOD TO Routes for scroll fetching in /chest page
 decide how my documents should be saved
 // the highlighted section is not being replaced properly in editor
 // make refreshing token in login.js
-
 -
-Update the Chest Component:
-
-1.Add an onClick handler to each scroll item to navigate to the Editor component with the selected scroll's ID.
-
-2.Pass the Scroll ID to the Editor Component:
-
-Use React Router to pass the scroll ID via URL parameters or a state object.
-
-3.Fetch and Display the Scroll Content in the Editor Component:
-
-Use the scroll ID from the URL to fetch the content and set it in the editor.
--
+fix refresh token component, route, etc. Error 422 on console.

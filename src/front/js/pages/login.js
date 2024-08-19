@@ -2,16 +2,6 @@ import React, { useState } from "react"; // Import the useState hook.
 import { Link, useNavigate } from "react-router-dom"; // Import the Link and useNavigate components from react-router-dom.
 import "../../styles/login.css";
 
-// Retrieve username (email) and password from form inputs.
-// Trigger handleSubmit function on form submission.
-// Ensure email and password are not empty before sending the request.
-// Fetch data from the API endpoint (/api/login) with email and password in the request body.
-// On successful login, store the returned token in localStorage.
-// On failure, display an error message.
-// Redirect to the /private route upon successful login.
-
-// `${process.env.BACKEND_URL}/api/login`
-
 export const Login = () => {
   // Create a Login component.
   const [email, setEmail] = useState(""); // Create a state variable email and a function setEmail to update it.
